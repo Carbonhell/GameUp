@@ -1,0 +1,24 @@
+La divisione del sistema in packages verrà realizzata tramite una esatta gerarchia del filesystem del progetto. La struttura di base usata è quella proposta dal framework Laravel, dove in particolare:
+\begin{itemize}
+	\item La cartella app conterrà tutto il codice per gestire le richieste dei clienti, dall’arrivo della richiesta ad un controller fino all’invio di una risposta;
+	\item La cartella database conterrà il codice relativo alla generazione della nostra fonte di dati relazionale, ovvero le migrazioni contenenti gli schemi delle nostre tabelle (così da avere una traccia dei cambiamenti applicati nel tempo al database) ed eventuali classi seeder per il riempimento di dati mock per il testing;
+	\item La cartella resources conterrà tutta la parte di front end del nostro sistema, categorizzato in tre sottocartelle:
+	\begin{itemize}
+		\item css per i fogli di stile;
+		\item js per il codice JavaScript client-side;
+		\item views per i documenti rappresentanti le interfacce proposte agli utenti;
+		\end{itemize}
+\end{itemize}
+
+In particolare, la cartella \emph{app} sarà quella dove verrà collocata la gran parte del nostro sistema. La sua struttura è come segue:
+\begin{itemize}
+	\item Exceptions, contenente le definizioni delle eccezioni lanciate dal nostro sistema;
+	\item Http, contenente una cartella Controllers dove verranno realizzati i nostri Controller per ogni pagina del sistema, assieme ad una cartella \emph{Middleware} per eventuali middleware customizzati;
+	\item Models, contenente i nostri modelli Eloquent per interfacciarci con il database relazionale;
+\end{itemize}
+
+Inoltre, verranno create due cartelle all’interno della cartella \emph{app} per i layer ulteriori individuati durante la fase di individuazione di design patterns:
+\begin{itemize}
+	\item Services, contenente i servizi offerti dal nostro sistema, raggruppati in cartelle che rappresentano i sottosistemi ai quali fanno parte;
+	\item Repositories, contenente l’interfaccia Repository e le repositories per l’accesso ai dati persistenti gestiti dal sistema;
+\end{itemize}

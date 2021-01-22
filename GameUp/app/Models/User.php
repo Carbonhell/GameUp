@@ -29,15 +29,9 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public const ROLE_CLIENT = 1;
+    public const ROLE_DEVELOPER = 2;
+    public const ROLE_ADMIN = 3;
 }

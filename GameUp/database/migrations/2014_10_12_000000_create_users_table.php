@@ -11,15 +11,15 @@ class CreateUsersTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('username')->unique();
             $table->string('password');
-            $table->rememberToken();
+            $table->string('email')->unique();
+            $table->string('avatar');
+            $table->unsignedSmallInteger('ruolo')->default(\App\Models\User::ROLE_CLIENT);
             $table->timestamps();
         });
     }
@@ -29,7 +29,7 @@ class CreateUsersTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('users');
     }

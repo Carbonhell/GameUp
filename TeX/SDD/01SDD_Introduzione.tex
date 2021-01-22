@@ -1,0 +1,68 @@
+\section{Obiettivo del sistema}
+Il sistema proposto vuole porsi come punto di accesso principale al gaming mobile. Ciò significa rispondere a vari tipi di richieste: in primis bisogna offrire una serie di funzionalità simili ad un e-commerce per permettere l’acquisto di videogiochi mobile, indipendentemente dalla piattaforma usata. Inoltre, il sistema deve fungere da intermediario tra sviluppatori e clienti e deve quindi poter permettere agli sviluppatori di proporre i propri contenuti agli utenti, sia permettendo la vendita e la gestione di essi, sia agevolando la costruzione di una comunità fiorente per i propri progetti, in modo da poter essere in stretto contatto con i propri clienti affezionati tramite discussioni da entrambe le parti con il videogioco come argomento principale. Per ultimo, questo contenuto deve essere gestito dal personale dietro al sistema GameUp, quindi deve offrire delle funzionalità di un gestionale per agevolare la moderazione del contenuto, assieme a modalità di autenticazione per tutti i tipi di utenti in modo da poter tracciare l’origine dei contenuti e poter moderare la piattaforma in modo efficace.
+Dallo studio fatto in fase di analisi, possiamo dividere il sistema in una serie di sottosistemi:
+\begin{itemize}
+	\item Gestione dell’utenza (autenticazione e gestione profili)
+	\item Gestione dei videogiochi (distribuzione, pubblicazione e gestione di essi)
+	\item Gestione dei contenuti (moderazione dei contenuti sui forum dei singoli videogiochi)
+\end{itemize}
+
+\section{Obiettivi di design e compromessi di progettazione}
+\subsection{Obiettivi di design}
+Il target del sistema proposto è estremamente ampio, oltre ad essere in costante crescita nel tempo grazie a dispositivi sempre più potenti. Deve quindi avere tempi di risposta minimi, per poter soddisfare quanti più utenti possibili, oltre che a gestire efficientemente la memoria, dovendo distribuire gli eseguibili dei videogiochi e svariate immagini associate ad essi. Essendo un nuovo sistema non basato su uno attualmente esistente, deve poter fare una buona impressione iniziale, quindi deve avere il minor numero di bug e di falle di sicurezza per evitare di perdere la fiducia dei propri utenti. Inoltre, le funzionalità principali devono essere implementare nel più breve tempo possibile, lasciando in secondo piano le funzionalità meno importanti e allo stesso tempo permettendo la facile integrazione di idee future atte a migliorare l’esperienza di tutti i tipi di utenti. Il sistema sarà implementato come applicazione Web per poter essere facilmente accessibile da qualsiasi dispositivo, con una eventuale applicazione dedicata per i dispositivi mobile (facilmente integrabile come PWA). Tutto ciò deve essere bilanciato con un uso semplice dell’intero sistema, per poter avere alte possibilità che gli utenti continuino ad usarlo partecipando alle varie comunità dei vari videogiochi, oltre che a generare introiti acquistando videogiochi a pagamento.
+
+\begin{center}
+	\begin{tabular}{||l | p{30em}||} 
+	\hline
+	\multicolumn{1}{||c|}{\textbf{Criterio}} & \multicolumn{1}{c||}{\textbf{Descrizione}} \\
+	\hline\hline
+	Tempo di risposta & Il sistema deve poter rispondere velocemente alle varie richieste degli utenti, in particolare quelle dei clienti, senza subire rallentamenti in caso di operazioni onerose quali il download di un videogioco. \\ 
+	\hline
+	Memoria & Il sistema deve gestire efficacemente la mole di dati in modo scalabile, così da garantire la possibilità di inserire quanti più videogiochi possibili e di transazioni da parte di sviluppatori e clienti. In particolare, i dati strutturati verranno gestiti tramite un database relazionale, mentre i contenuti scaricabili, principalmente gli eseguibili dei videogiochi e i vari tipi di immagini, dovranno essere salvate come asset esterni, avendo un riferimento nel database relazionale. \\
+	\hline
+	Disponibilità & Il sistema deve essere disponibile 24 ore su 24, 7 giorni su 7, in modo da garantire l’accesso agli utenti di qualsiasi nazionalità e permettendo il deployment sul mercato internazionale. \\
+	\hline
+	Sicurezza & Il sistema deve essere quanto più sicuro possibile, usando pratiche conosciute e ben testate per l’autenticazione e l’autorizzazione per i vari servizi, assieme all’uso di un servizio totalmente esterno per gestire i pagamenti. \\
+	\hline
+	Estensibilità & Il sistema implementerà le funzionalità ritenute fondamentali per poter entrare velocemente nel mercato, quindi deve poter essere facilmente esteso nel tempo con le funzionalità non urgenti, oltre che ad eventuali funzionalità future scoperte con il tempo, in base a come reagisce il mercato. \\
+	\hline
+	Adattabilità & Il sistema deve obbligatoriamente essere disponibile sui principali dispositivi mobile del momento, senza precludere la possibilità di nuovi dispositivi mobile futuri sul quale deve potersi affermare nel minor tempo possibile. \\
+	\hline
+	Usabilità & Essendo un nuovo tipo di sistema che si differenzia particolarmente da quelli esistenti, il sistema deve essere semplice da usare per garantire una percentuale alta di utenti registrati e che rimangono attivi all’interno della piattaforma. \\
+	\hline
+   \end{tabular}
+\end{center}
+
+\subsection{Compromessi di progettazione}
+\paragraph{Tempo di risposta - Memoria}
+Un tempo di risposta basso è fondamentale per garantire un sistema fluido e che renda la navigazione la più fluida possibile. Per tale motivo, si prevede di applicare la ridondanza di dati calcolati all’interno del database, così da rendere le richieste verso di esso più veloci, a discapito di un uso di memoria maggiore.
+
+\paragraph{Performance - Leggibilità}
+Il sistema deve essere veloce abbastanza per soddisfare le richieste di una utenza in costante crescita, ma la leggibilità del codice è considerata come più importante: il sistema, essendo basato su una area di mercato ancora non esplorata completamente, deve poter crescere facilmente con nuove funzionalità e nuovo personale, quindi il codice deve essere semplice da capire e da modificare.
+
+\paragraph{Tempo di consegna - Funzionalità}
+Il sistema deve essere operativo nel minor tempo possibile per soddisfare le richieste del cliente. Per tale motivo, è considerato accettabile il deployment delle sole funzionalità ritenute fondamentali, relegando l’implementazione delle funzionalità rimanenti in aggiornamenti futuri.
+
+\paragraph{Tempo di consegna - Qualità}
+Come detto precedentemente, il sistema deve essere pronto velocemente, ma ciò non deve impattare in modo eccessivo la qualità, fondamentale per questo tipo di sistema. Verrà quindi ritenuta necessaria l’implementazione corretta delle funzionalità dei clienti paganti, permettendo bug minori in quelle dedicate agli sviluppatori e lasciando per ultime quelle dedicate agli amministratori. Il motivo di ciò sta nel fatto che una utenza felice porta ulteriori utenti nella piattaforma, i quali rappresentano ciò che gli sviluppatori cercano e che per tale motivo possono essere disposti a convivere con bug non troppo importanti se possono rilasciare i propri videogiochi sulla piattaforma. Gli amministratori, invece, fanno parte del personale della piattaforma, e come tali avranno più pazienza per eventuali problemi, potendo contattare anche in modo più semplice gli sviluppatori del sistema, esprimendo le loro opinioni.
+
+\section{Definizioni, acronimi e abbreviazioni}
+\begin{itemize}
+	\item PWA: Progressive Web App, ovvero un ibrido tra le normali pagine Web e le applicazioni native mobile. Permettono una semplice implementazione di una applicazione nativa che si interfaccia ad un sito web esistente.
+\end{itemize}
+
+\section{Riferimenti}
+\begin{itemize}
+	\item RAD\_GameUp.pdf
+	\item Steam \url{https://store.steampowered.com/}
+	\item Android Play Store
+	\item iOS App Store
+	\item Laravel \url{https://laravel.com/}
+	\item Laravel Sail \url{https://laravel.com/docs/8.x/sail}
+	\item Docker \url{https://www.docker.com/}
+	\item Docker Container \url{https://www.docker.com/resources/what-container}
+	\item WSL \url{https://docs.microsoft.com/it-it/windows/wsl/about}
+\end{itemize}
+
+\section{Panoramica}
+In questo documento verrà analizzata la struttura del sistema e dei sottosistemi relativi alla piattaforma GameUp, assieme alle condizioni limite, alla gestione degli accessi e decidendo lo stack tecnologico da utilizzare per lo sviluppo, oltre che a dettagliare i servizi offerti da ciascun sottosistema.

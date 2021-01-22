@@ -1,0 +1,71 @@
+\section{Compromessi di Object Design}
+Il compromesso principale di object design è dato dal poco tempo disponibile per lo sviluppo dell’implementazione core del sistema: per avere una base da cui partire, si sceglierà di usare componenti off-the-shelf laddove possibile, considerando anche l’assenza di un budget dedicato al sistema, sia per la parte relativa al back-end e allo sviluppo della logica di business, sia per lo sviluppo del front-end con le relative interfacce che verranno servite ai vari utenti del sistema.
+
+\subsection{Componenti off-the-shelf}
+Per la progettazione del back end del sistema useremo Laravel, un framework dell’ecosistema del linguaggio di programmazione PHP il quale offre una base potente, fluida ed estremamente comoda nella quale sviluppare una applicazione Web, assieme a svariati componenti per semplificare qualsiasi particolarità si voglia implementare o gestire, come ad esempio Laravel Sail per la gestione delle condizioni limite del sistema (startup e terminazione), Laravel Socialite per la gestione dell’autenticazione di utenti tramite OAuth e molto altro. \\
+In particolare, per l’implementazione del sistema verrà usata l’ultima attuale versione del framework stabile, ovvero la 8.5.8. I componenti che verranno usati saranno:
+
+\begin{itemize}
+	\item Laravel Sail, per la gestione dello startup e della terminazione del sistema;
+	\item Eloquent, come ORM per la comunicazione con il database;
+	\item Laravel-Admin, per l’implementazione del pannello di amministrazione;
+	\item Laravel Blade, templating engine principale di Laravel per l’implementazione del front end, ovvero di tutte le interfacce proposte dal sistema;
+	\item Laravel Cashier, per interfacciarsi con il servizio esterno di gestione di pagamenti Stripe.
+\end{itemize}
+
+In particolare, Eloquent è stato scelto poiché è già integrato nel framework ed è proposto come ORM principale e per motivi simili sono stati scelti anche Laravel Blade e Laravel Cashier. Invece, Laravel-Admin è stato scelto poiché il componente principale suggerito dagli sviluppatori del framework prevede un costo non irrisorio (\$99 per progetto), si è quindi preferito scegliere una alternativa \emph{open-source} e gratis, sulla quale si è già maturata una certa esperienza tramite ulteriori progetti e lavori. Le altre componenti e il framework stesso sono \emph{open-source} e completamente gratis, quindi i requisiti di costo sono soddisfatti.
+
+\subsection{Design Patterns}
+\subsubsection{Service Layer Pattern}
+Nel framework Laravel, sorge il problema di dove collocare la logica di business, relativa ai servizi individuati durante la fase di System Design. Porre tale logica all’interno dei Controller violerebbe il principio di responsabilità singola: i Controller dovrebbero preoccuparsi solamente di ricevere una richiesta e di fornire una risposta, non di come i dati della risposta vengono ottenuti. Per la risoluzione di tale problematica, verrà applicato il Service Layer pattern, il quale includerà la logica di business del sistema, permettendo ai vari Controller di poter richiedere un particolare tipo di servizio offerto da un sottosistema senza dover comunicare direttamente, ad esempio, con i Model. \\
+Per l’implementazione di tale pattern, verrà creata un package contenente i servizi del nostro sistema e le classi contenuti in tale package potranno essere incluse nei Controller tramite la tecnica della \emph{dependency injection}, così da ridurre quanto più possibile l’accoppiamento tra Controller e servizi, così da permettere eventualmente l’uso di mock di servizi per il testing.
+
+\subsubsection{Repository Pattern}
+Come specificato nel documento di System Design, il nostro sistema avrà fonti di dati multiple. La principale consiste nel database relazionale, il quale sarà in comunicazione con il nostro sistema attraverso Eloquent. Ma sono presenti anche due ulteriori fonti di dati:
+\begin{itemize}
+	\item I file contenuti nel filesystem, ovvero immagini ed eseguibili dei videogiochi;
+	\item Eventuali servizi esterni futuri, o anche servizi interni per operazioni di caching (es. Redis);
+\end{itemize}
+Per tale motivo, si ritiene opportuno astrarre l’accesso alle fonti di dati con un layer composto da implementazioni di una interfaccia Repository, la quale esporrà i metodi per le operazioni principali relative alla persistenza dei dati (creazione, aggiornamento, ricerca e cancellazione). In tal modo, verrà ridotto l’accoppiamento tra il layer dei servizi e quello della persistenza dei dati. Per tale motivo, si ritiene necessaria la creazione di semplici classi PHP per ogni classe del nostro sistema (es. Utente, Videogioco) che verrà usato come tipo di ritorno dei metodi delle nostre Repository e che saranno semplici contenitori di dati con getter, setter e costruttori che permettono l’istanziazione partendo dagli oggetti ottenuti dalle nostre fonti di dati (es. Modelli).
+
+\subsection{Linee guida per la documentazione delle interfacce}
+Agli sviluppatori viene richiesto di seguire le regole di seguito enunciate per mantenere il codice il più consistente possibile, così da mantenere alta la qualità del progetto ed eventualmente favorire l’integrazione di sviluppatori ulteriori in futuro.
+
+\subsubsection{Regole Globali}
+\begin{itemize}
+	\item Tutto il codice PHP scritto deve rispettare le regole standard di PHP, ovvero le PSR. In particolare, considerato l’uso del framework Laravel di ultima versione, è necessario l’uso delle PSR-12 (\url{https://www.php-fig.org/psr/psr-12/}), così da ridurre al minimo l’impatto cognitivo del progetto per un eventuale nuovo sviluppatore;
+	\item I nomi dei file contenenti delle sottoclassi dei controller di Laravel (e le sottoclassi stesse) devono essere singolari e devono essere seguiti dalla parola “Controller” (esempio: “VideogameController.php” contenente la classe “VideogameController”). Stessa cosa deve avvenire con i servizi e con le repository: nel primo caso, il termine da usare come suffisso sarà “Service”, nel secondo, “Repository”;
+	\item I nomi dei file contenenti delle sottoclassi dei model di Eloquent (e le sottoclassi stesse) devono essere singolari (esempio: “Videogame.php” contenente la classe “Videogame”);
+	\item Usare sempre oggetti \emph{Carbon}, forniti dal framework Laravel, per rappresentare internamente date e orari;
+\end{itemize}
+
+\subsubsection{Organizzazione dei file}
+\begin{itemize}
+	\item Tutti i file devono seguire la gerarchia di cartelle proposta da Laravel, in particolare Controllers, Models e Views.
+\end{itemize}
+
+\subsection{Definizioni, Acronimi e Abbreviazioni}
+\begin{itemize}
+	\item Off-the-shelf: Componenti oppure framework pronti all’utilizzo per risolvere una determinata problematica;
+	\item Back end: La parte del sistema contenente la logica applicativa;
+	\item Front end: La parte del sistema contenente le interfacce proposte all’utente per interagire con il sistema;
+	\item Laravel: Web Application Framework per la creazione di sistemi sul Web;
+	\item Laravel Sail: Componente di Laravel per la gestione dello startup e della terminazione del sistema;
+	\item ORM: Object relational mapping, una tecnica che permette di interfacciarsi ad un sistema software tramite il paradigma della programmazione orientata agli oggetti;
+	\item Eloquent: ORM principale del framework Laravel;
+	\item Laravel-Admin: Componente di Laravel per l’implementazione di pannelli di amministrazione;
+	\item Laravel Cashier: Componente di Laravel per gestire la comunicazione con servizi di pagamento;
+	\item Stripe: Infrastruttura di pagamenti online;
+	\item PSR: PHP Standard Recommendations;
+\end{itemize}
+
+\subsection{Riferimenti}
+\begin{itemize}
+	\item Laravel: \url{https://laravel.com/}
+	\item Laravel Sail: \url{https://laravel.com/docs/8.x/sail}
+	\item Eloquent: \url{https://laravel.com/docs/8.x/eloquent}
+	\item Laravel-Admin: \url{https://github.com/z-song/laravel-admin}
+	\item Laravel Cashier: \url{https://laravel.com/docs/8.x/billing}
+	\item Stripe: \url{https://stripe.com/it}
+	\item PSR-12: \url{https://www.php-fig.org/psr/psr-12/}
+\end{itemize}
