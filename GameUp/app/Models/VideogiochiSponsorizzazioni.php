@@ -5,8 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * App\Models\VideogiochiSponsorizzazioni
+ *
+ * @property-read \App\Models\Videogiochi $videogioco
+ * @method static \Illuminate\Database\Eloquent\Builder|VideogiochiSponsorizzazioni newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|VideogiochiSponsorizzazioni newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|VideogiochiSponsorizzazioni query()
+ * @mixin \Eloquent
+ */
 class VideogiochiSponsorizzazioni extends Model
 {
+    protected $table = 'videogiochi_sponsorizzazioni';
 
     /**
      * The attributes that are mass assignable.

@@ -7,17 +7,28 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * App\Models\User
+ *
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @mixin \Eloquent
+ */
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    protected $table = 'users';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
     ];
@@ -30,8 +41,4 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
-
-    public const ROLE_CLIENT = 1;
-    public const ROLE_DEVELOPER = 2;
-    public const ROLE_ADMIN = 3;
 }

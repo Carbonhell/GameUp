@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('email')->unique();
             $table->string('avatar');
-            $table->unsignedSmallInteger('ruolo')->default(\App\Models\User::ROLE_CLIENT);
+            $table->unsignedSmallInteger('ruolo')->default(\App\Data\Utenza::ROLE_CLIENT);
             $table->timestamps();
         });
     }

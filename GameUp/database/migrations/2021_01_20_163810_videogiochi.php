@@ -13,17 +13,23 @@ class Videogiochi extends Migration
      */
     public function up(): void
     {
-        Schema::create('videogiochi', function(Blueprint $table) {
+        Schema::create('contenuti', function(Blueprint $table) {
             $table->increments('id');
+            $table->boolean('visibile');
+        });
+        Schema::create('videogiochi', function(Blueprint $table) {
+            $table->unsignedInteger('id')->primary();
             $table->unsignedBigInteger('autore_id');
             $table->string('logo');
             $table->string('titolo');
             $table->text('descrizione');
             $table->decimal('prezzo');
             $table->date('data_pubblicazione');
-            $table->boolean('visibile');
 
             $table->timestamps();
+            $table->foreign('id')
+                ->on('contenuti')
+                ->references('id');
             $table->foreign('autore_id')
                 ->on('users')
                 ->references('id');
@@ -78,5 +84,6 @@ class Videogiochi extends Migration
         Schema::dropIfExists('videogiochi_versioni');
         Schema::dropIfExists('videogiochi_immagini');
         Schema::dropIfExists('videogiochi');
+        Schema::dropIfExists('contenuti');
     }
 }
