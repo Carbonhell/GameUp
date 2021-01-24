@@ -24,6 +24,22 @@ class UtenzaService
         return Auth::check();
     }
 
+    public function isAdmin()
+    {
+        if(!$this->isAuthenticated()) {
+            return false;
+        }
+        return Auth::user()->ruolo === Utenza::ROLE_ADMIN;
+    }
+
+    public function isSviluppatore()
+    {
+        if(!$this->isAuthenticated()) {
+            return false;
+        }
+        return Auth::user()->ruolo === Utenza::ROLE_DEVELOPER;
+    }
+
     public function login(string $username, string $password): bool
     {
         return Auth::attempt(['username' => $username, 'password' => $password]);
@@ -41,7 +57,7 @@ class UtenzaService
      * @param File $avatar
      * @return bool
      */
-    public function registraUtente(string $username, string $password, string $email, UploadedFile $avatar): bool
+    public function registraUtente(string $username, string $password, string $email, UploadedFile $avatar = null): bool
     {
         if ($this->usernameExists($username) || $this->emailExists($email)) {
             return false;
@@ -104,19 +120,26 @@ class UtenzaService
         return $this->utenzaRepository->findEmail($email) !== null;
     }
 
+    /**
+     * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
     public
-    function getAvatar()
+    function getAvatar(): string
     {
         $avatarPath = Auth::user()->avatar;
         return \Storage::get($avatarPath);
     }
 
     /**
-     * @return Utenza
+     * @return Utenza|null
      */
     public
-    function getUtenteAutenticato(): Utenza
+    function getUtenteAutenticato(): ?Utenza
     {
+        if(!$this->isAuthenticated()) {
+            return null;
+        }
         return Utenza::from(Auth::user());
     }
 }

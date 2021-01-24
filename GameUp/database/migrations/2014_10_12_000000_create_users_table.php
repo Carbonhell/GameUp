@@ -13,15 +13,32 @@ class CreateUsersTable extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('username')->unique();
-            $table->string('password');
-            $table->string('email')->unique();
-            $table->string('avatar');
-            $table->unsignedSmallInteger('ruolo')->default(\App\Data\Utenza::ROLE_CLIENT);
-            $table->timestamps();
-        });
+        Schema::create(
+            'users',
+            function (Blueprint $table) {
+                $table->id();
+                $table->string('username')->unique();
+                $table->string('password');
+                $table->string('email')->unique();
+                $table->string('avatar')->nullable();
+                $table->unsignedSmallInteger('ruolo')->default(\App\Data\Utenza::ROLE_CLIENT);
+                $table->timestamps();
+            }
+        );
+
+        $now = now();
+        DB::table('users')->insert(
+            [
+                [
+                    'username' => 'admin',
+                    'password' => Hash::make('root'),
+                    'email' => 'example@example.com',
+                    'ruolo' => \App\Data\Utenza::ROLE_ADMIN,
+                    'created_at' => $now,
+                    'updated_at' => $now
+                ]
+            ]
+        );
     }
 
     /**

@@ -74,7 +74,7 @@ class UtenzaRepository
         string $username,
         string $password,
         string $email,
-        UploadedFile $avatar
+        UploadedFile $avatar = null
     ): Authenticatable {
         $model = new User();
         $model->fill(
@@ -85,8 +85,10 @@ class UtenzaRepository
             ]
         );
 
-        $filePath = \Storage::putFile('uploads/avatars', $avatar);
-        $model->avatar = $filePath;
+        if($avatar) {
+            $filePath = \Storage::putFile('uploads/avatars', $avatar);
+            $model->avatar = $filePath;
+        }
 
         $model->save();
         return $model;
@@ -99,7 +101,7 @@ class UtenzaRepository
         string $email = null,
         bool $isSviluppatore = null,
         UploadedFile $avatar = null
-    ) {
+    ): bool {
         $user = User::find($idUtente);
         if (!$user || (!$username && !$nuovaPassword && !$email && $isSviluppatore === null && !$avatar)) {
             return false;

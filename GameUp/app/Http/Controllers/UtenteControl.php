@@ -68,7 +68,7 @@ class UtenteControl extends Controller
                 'username' => 'required',
                 'email' => 'required|email',
                 'password' => 'required|confirmed',
-                'avatar' => 'required|max:5000'
+                'avatar' => 'max:5000'
             ]
         );
         if (!$this->utenzaService->registraUtente(
@@ -80,18 +80,6 @@ class UtenteControl extends Controller
             return back()->withErrors(['message' => 'Registrazione fallita, username o email non unici!']);
         }
         return response()->redirectToRoute('home');
-    }
-
-    // TODO
-    public function tentaRecuperoPassword(Request $request): Response
-    {
-        return response();
-    }
-
-    // TODO
-    public function resetPassword(Request $request): Response
-    {
-        return response();
     }
 
     public function visualizzaProfilo(): View

@@ -24,6 +24,15 @@ class VideogiocoService
         return $this->videogiocoRepository->ottieniUltimiVideogiochiPubblicati();
     }
 
+    /**
+     * @param string|null $titolo
+     * @param float|null $prezzo
+     * @param array|null $tagsObbligatorie
+     * @param array|null $tagsOpzionali
+     * @param bool $acquistati
+     * @param string $ordine
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     */
     public function applicaCriteri(
         string $titolo = null,
         float $prezzo = null,
