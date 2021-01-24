@@ -20,9 +20,9 @@ class UtenteControl extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|RedirectResponse|Response
+     * @return RedirectResponse
      */
-    public function login(Request $request)
+    public function login(Request $request): RedirectResponse
     {
         $request->validate(
             [
@@ -30,7 +30,7 @@ class UtenteControl extends Controller
                 'password' => 'required'
             ]
         );
-        if ($this->utenzaService->isAuthorized()) {
+        if ($this->utenzaService->isAuthenticated()) {
             return back();
         }
         if ($this->utenzaService->login($request->input('username'), $request->input('password'))) {
@@ -40,6 +40,9 @@ class UtenteControl extends Controller
         return back()->withErrors(['message' => 'Dati non corretti!']);
     }
 
+    /**
+     * @return RedirectResponse
+     */
     public function logout(): RedirectResponse
     {
         $this->utenzaService->logout();
@@ -47,15 +50,18 @@ class UtenteControl extends Controller
     }
 
     /**
-     * @param Request $request
      * @return View
      */
-    public function registrazione(Request $request): View
+    public function registrazione(): View
     {
         return view('registrazione');
     }
 
-    public function effettuaRegistrazione(Request $request)
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function effettuaRegistrazione(Request $request): RedirectResponse
     {
         $request->validate(
             [
@@ -90,7 +96,7 @@ class UtenteControl extends Controller
 
     public function visualizzaProfilo(): View
     {
-        $user = $this->utenzaService->getAuthenticatedUser();
+        $user = $this->utenzaService->getUtenteAutenticato();
         return view(
             'visualizzaProfilo',
             [
@@ -103,7 +109,7 @@ class UtenteControl extends Controller
 
     public function modificaProfilo(): View
     {
-        $user = $this->utenzaService->getAuthenticatedUser();
+        $user = $this->utenzaService->getUtenteAutenticato();
         return view(
             'modificaProfilo',
             [

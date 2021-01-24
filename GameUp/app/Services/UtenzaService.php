@@ -19,7 +19,7 @@ class UtenzaService
         $this->utenzaRepository = $utenzaRepository;
     }
 
-    public function isAuthorized()
+    public function isAuthenticated()
     {
         return Auth::check();
     }
@@ -111,8 +111,11 @@ class UtenzaService
         return \Storage::get($avatarPath);
     }
 
+    /**
+     * @return Utenza
+     */
     public
-    function getAuthenticatedUser()
+    function getUtenteAutenticato(): Utenza
     {
         return Utenza::from(Auth::user());
     }

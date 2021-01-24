@@ -15,55 +15,62 @@ Le classi che comporranno il nostro back end saranno di cinque tipi: Model, Cont
 	\end{itemize}\\
 	\hline
 	Firme Metodi & \begin{itemize}
-		\item[+] login(Request \$request): Response
-		\item[+] logout(): Response
-		\item[+] registrazione(Request \$request): Response
-		\item[+] tentaRecuperoPassword(Request \$request): Response
-		\item[+] resetPassword(Request \$request): Response
-		\item[+] visualizzaProfilo(): Response
-		\item[+] modificaProfilo(): Response
-		\item[+] modificaDatiProfilo(Request \$request): Response
+		\item[+] login(Request request): RedirectResponse
+		\item[+] logout(): RedirectResponse
+		\item[+] registrazione(): View
+		\item[+] effettuaRegistrazione(Request request): RedirectResponse 
+		\item[+] tentaRecuperoPassword(Request request): Response
+		\item[+] resetPassword(Request request): Response
+		\item[+] visualizzaProfilo(): View
+		\item[+] modificaProfilo(): View
+		\item[+] modificaDatiProfilo(Request request): RedirectResponse
+		\item[+] getAvatar(): Response 
 	\end{itemize}\\
 	\hline
 	Pre-condizioni & \begin{itemize}
 		\item \textbf{context} UtenteControl::login(request)
 		\begin{itemize}
-			\item[ ] \textbf{pre:} request.has([‘username’, ‘password’]) and !Auth::check()
+			\item[ ] \textbf{pre:} request.has([‘username’, ‘password’]) and !utenzaService.isAuthenticated()
 		\end{itemize}
 	  
 	    \item \textbf{context} UtenteControl::logout()
 		\begin{itemize}
-			\item[ ] \textbf{pre:} Auth::check()
+			\item[ ] \textbf{pre:} utenzaService.isAuthenticated()
 		\end{itemize} 
 	  
-	    \item \textbf{context} UtenteControl::registrazione(request) 
+	    \item \textbf{context} UtenteControl::effettuaRegistrazione(request) 
 		\begin{itemize}
 			\item[ ] \textbf{pre:} request.has([‘username’, ‘email’, ‘password’, ‘confermaPassword’, 'avatar'])
 		\end{itemize} 
 	  
 	    \item \textbf{context} UtenteControl::tentaRecuperoPassword(request) 
 		\begin{itemize}
-			\item[ ] \textbf{pre:} !Auth::check() and request.has(‘email’)
+			\item[ ] \textbf{pre:} !utenzaService.isAuthenticated() and request.has(‘email’)
 		\end{itemize} 
 	  
 	    \item \textbf{context} UtenteControl::resetPassword(request) 
 		\begin{itemize}
-			\item[ ] \textbf{pre:} !Auth::check() and request.hasValidSignature() and request.has([‘email’, ‘password’, ‘confermaPassword’])
+			\item[ ] \textbf{pre:} !utenzaService.isAuthenticated() and request.hasValidSignature() and request.has([‘email’, ‘password’, ‘confermaPassword’])
 		\end{itemize} 
 	  
 	    \item \textbf{context} UtenteControl::visualizzaProfilo() 
 		\begin{itemize}
-			\item[ ] \textbf{pre:} Auth::check()
+			\item[ ] \textbf{pre:} utenzaService.isAuthenticated()
 		\end{itemize} 
 	  
 	    \item \textbf{context} UtenteControl::modificaProfilo() 
 		\begin{itemize}
-			\item[ ] \textbf{pre:} Auth::check()
+			\item[ ] \textbf{pre:} utenzaService.isAuthenticated()
 		\end{itemize} 
 	  
 	    \item \textbf{context} UtenteControl::modificaDatiProfilo(request) 
 		\begin{itemize}
-			\item[ ] \textbf{pre:} request.has([‘username’, ‘email’, ‘isSviluppatore’, ‘avatar’, ‘password’]) and Auth::check()
+			\item[ ] \textbf{pre:} request.hasAny([‘username’, ‘email’, ‘isSviluppatore’, ‘avatar’, ‘nuovaPassword’]) and utenzaService.isAuthenticated()
+		\end{itemize}
+
+		\item \textbf{context} UtenteControl::getAvatar() 
+		\begin{itemize}
+			\item[ ] \textbf{pre:} utenzaService.isAuthenticated()
 		\end{itemize} 
 	\end{itemize}\\
 	\hline
@@ -76,27 +83,27 @@ Le classi che comporranno il nostro back end saranno di cinque tipi: Model, Cont
 	Post-condizioni & \begin{itemize}
 		\item \textbf{context} UtenteControl::login(request)
 		\begin{itemize}
-			\item[ ] \textbf{post:} Auth::check()
+			\item[ ] \textbf{post:} utenzaService.isAuthenticated()
 		\end{itemize}
 	  
 	    \item \textbf{context} UtenteControl::logout()
 		\begin{itemize}
-			\item[ ] \textbf{post:} !Auth::check()
+			\item[ ] \textbf{post:} !utenzaService.isAuthenticated()
 		\end{itemize} 
 	  
 	    \item \textbf{context} UtenteControl::registrazione(request) 
 		\begin{itemize}
-			\item[ ] \textbf{post:} Auth::check() and utenzaService.usernameExists(request.input(‘username’) and utenzaService.emailExists(request.input('email'))
+			\item[ ] \textbf{post:} utenzaService.isAuthenticated() and utenzaService.usernameExists(request.input(‘username’) and utenzaService.emailExists(request.input('email'))
 		\end{itemize} 
 	  
 	    \item \textbf{context} UtenteControl::resetPassword(request) 
 		\begin{itemize}
-			\item[ ] \textbf{post:} Auth::check() and utenzaService.ottieniProfilo().password = request.input('password')
+			\item[ ] \textbf{post:} utenzaService.isAuthenticated() and utenzaService.getUtenteAutenticato().password == request.input('password')
 		\end{itemize} 
 
 	    \item \textbf{context} UtenteControl::modificaDatiProfilo(request) 
 		\begin{itemize}
-			\item[ ] \textbf{post:} utenzaService.ottieniProfilo().username = request.input(‘username’) and utenzaService.ottieniProfilo().email = request.input(‘email’) and utenzaService.ottieniProfilo().isSviluppatore = request.input(‘isSviluppatore’) and utenzaService.ottieniProfilo().avatar = request.input(‘avatar’)
+			\item[ ] \textbf{post:} utenzaService.getUtenteAutenticato().username == request.input(‘username’) and utenzaService.getUtenteAutenticato().email == request.input(‘email’) and utenzaService.getUtenteAutenticato().isSviluppatore == request.input(‘isSviluppatore’) and utenzaService.getUtenteAutenticato().avatar == request.input(‘avatar’)
 		\end{itemize} 
 	\end{itemize}\\
 	\hline
@@ -124,31 +131,34 @@ Le classi che comporranno il nostro back end saranno di cinque tipi: Model, Cont
 	\end{itemize}\\
 	\hline
 	Firme Metodi & \begin{itemize}
-		\item[+] ottieniDatiVideogioco(Request \$request): Response
+		\item[+] ottieniDatiVideogioco(Request request): Response
+		\item[+] paginaIniziale(): View 
+		\item[+] catalogo(): View 
+		\item[+] getLogo(int idVideogioco): Response
 		\item[+] getListaVideogiochi(): Response
-		\item[+] applicaCriteri(Request \$request): JsonResponse
+		\item[+] applicaCriteri(Request request): JsonResponse
 		\item[+] videogiochiInEvidenza(): Response
 		\item[+] avviaModifica(): Response
-		\item[+] aggiornaDatiVideogioco(Request \$request): Response
+		\item[+] aggiornaDatiVideogioco(Request request): Response
 		\item[+] visualizzaRichieste(): Response
-		\item[+] visualizzaDettagliRichiesta(Request \$request): Response
-		\item[+] risolviRichiesta(Request \$request): Response
+		\item[+] visualizzaDettagliRichiesta(Request request): Response
+		\item[+] risolviRichiesta(Request request): Response
 		\item[+] richiediModificaVideogioco(): Response()
-		\item[+] modificaDatiVideogioco(Request \$request): Response
-		\item[+] richiediPubblicazioneVideogioco(Request \$request): Response
+		\item[+] modificaDatiVideogioco(Request request): Response
+		\item[+] richiediPubblicazioneVideogioco(Request request): Response
 		\item[+] iniziaSponsorizzazione(): Response
-		\item[+] verificaDisponibilitàSettimana(Request \$request): JsonResponse
+		\item[+] verificaDisponibilitàSettimana(Request request): JsonResponse
 		\item[+] procediPagamentoSponsorizzazione(): Response
-		\item[+] acquistaVideogioco(Request \$request): Response
-		\item[+] downloadVideogioco(Request \$request): Response
+		\item[+] acquistaVideogioco(Request request): Response
+		\item[+] downloadVideogioco(Request request): Response
 		\item[+] avviaProceduraSuggerimentoTags(): Response
-		\item[+] suggerisciTags(Request \$request): JsonResponse
-		\item[+] rimuoviSuggerimento(Request \$request): JsonResponse
-		\item[+] salvaValutazione(Request \$request): JsonResponse
-		\item[+] salvaRecensione(Request \$request): JsonResponse
+		\item[+] suggerisciTags(Request request): JsonResponse
+		\item[+] rimuoviSuggerimento(Request request): JsonResponse
+		\item[+] salvaValutazione(Request request): JsonResponse
+		\item[+] salvaRecensione(Request request): JsonResponse
 		\item[+] iniziaReport(): Response
-		\item[+] creaReport(Request \$request): Response
-		\item[+] nascondi(Request \$request): Response
+		\item[+] creaReport(Request request): Response
+		\item[+] nascondi(Request request): Response
 	\end{itemize}\\
 	\hline
 \end{tabular}
@@ -259,12 +269,12 @@ Pre-condizioni & \begin{itemize}[leftmargin=*]
 
 	\item \textbf{context} VideogiocoControl::salvaValutazione(request)
 	\begin{itemize}
-		\item[ ] \textbf{pre:} Auth::check() and request.has(‘idRecensione’) and videogiocoService.getValutazioneRecensione(request.input(‘idRecensione’), auth().id) = null
+		\item[ ] \textbf{pre:} Auth::check() and request.has(‘idRecensione’) and videogiocoService.getValutazioneRecensione(request.input(‘idRecensione’), auth().id) == null
 	\end{itemize}
 
 	\item \textbf{context} VideogiocoControl::salvaRecensione(request)
 	\begin{itemize}
-		\item[ ] \textbf{pre:} Auth::check() and request.has(‘idVideogioco’) and videogiocoService.getRecensione(request.input(‘idVideogioco), auth().id) = null
+		\item[ ] \textbf{pre:} Auth::check() and request.has(‘idVideogioco’) and videogiocoService.getRecensione(request.input(‘idVideogioco), auth().id) == null
 	\end{itemize}
 
 	\item \textbf{context} VideogiocoControl::iniziaReport()
@@ -280,7 +290,7 @@ Pre-condizioni & \begin{itemize}[leftmargin=*]
 
 	\item \textbf{context} VideogiocoControl::nascondi(request)
 	\begin{itemize}
-		\item[ ] \textbf{pre:} Auth::check() and utenzaService.isAdmin() and request.has(‘idVideogioco’) and videogiocoService.getVideogioco(request.input(‘idVideogioco’)).nascosto = false	
+		\item[ ] \textbf{pre:} Auth::check() and utenzaService.isAdmin() and request.has(‘idVideogioco’) and videogiocoService.getVideogioco(request.input(‘idVideogioco’)).nascosto == false	
 	\end{itemize}
 \end{itemize}\\
 \hline
@@ -293,12 +303,12 @@ Pre-condizioni & \begin{itemize}[leftmargin=*]
 Post-condizioni & \begin{itemize}[leftmargin=*]
 	\item \textbf{context} VideogiocoControl::aggiornaDatiVideogioco(request)
 	\begin{itemize}
-		\item[ ] \textbf{post:} request.all()\verb|->|forAll(k: string, v: string | videogiocoService.getVideogioco(request.input(‘id’))[k] = v)	
+		\item[ ] \textbf{post:} request.all()\verb|->|forAll(k: string, v: string $|$ videogiocoService.getVideogioco(request.input(‘id’))[k] == v)	
 	\end{itemize}
 
 	\item \textbf{context} VideogiocoControl::risolviRichiesta(request)
 	\begin{itemize}
-		\item[ ] \textbf{post:} videogiocoService.getRichiesta(request.input(‘idRichiesta’)).esito = request.input(‘esito’) and videogiocoService.getRichiesta(request.input(‘idRichiesta’)).commento = request.input(‘commento’)
+		\item[ ] \textbf{post:} videogiocoService.getRichiesta(request.input(‘idRichiesta’)).esito == request.input(‘esito’) and videogiocoService.getRichiesta(request.input(‘idRichiesta’)).commento == request.input(‘commento’)
 	\end{itemize}
 
 	\item \textbf{context} VideogiocoControl::modificaDatiVideogioco(request)
@@ -333,17 +343,17 @@ Post-condizioni & \begin{itemize}[leftmargin=*]
 		.getVideogiochiAcquistati(auth().id) =
 		videogiocoService\newline 
 		@pre.getVideogiochiAcquistati(auth().id) + 1
-		and videogiocoService.\newline checkVideogiocoAcquistato(request.input(‘idVideogioco’)) = true	
+		and videogiocoService.\newline checkVideogiocoAcquistato(request.input(‘idVideogioco’)) == true	
 	\end{itemize}
 
 	\item \textbf{context} VideogiocoControl::suggerisciTags(request)
 	\begin{itemize}
-		\item[ ] \textbf{post:} videogiocoService\newline .getTags(request.input(‘idVideogioco))\newline \verb|->|intersection(request.input(‘tags’)) = request.input(‘tags’)
+		\item[ ] \textbf{post:} videogiocoService\newline .getTags(request.input(‘idVideogioco))\newline \verb|->|intersection(request.input(‘tags’)) == request.input(‘tags’)
 	\end{itemize}
 
 	\item \textbf{context} VideogiocoControl::rimuoviSuggerimento(request)
 	\begin{itemize}
-		\item[ ] \textbf{post:} videogiocoService.getTagsSuggerite(request.input(‘idVideogioco’), auth().id)\verb|->|intersection(request.input(‘tags’))\verb|->|size = 0
+		\item[ ] \textbf{post:} videogiocoService.getTagsSuggerite(request.input(‘idVideogioco’), auth().id)\verb|->|intersection(request.input(‘tags’))\verb|->|size == 0
 	\end{itemize}
 \end{itemize}\\
 \hline
@@ -361,7 +371,7 @@ Post-condizioni & \begin{itemize}[leftmargin=*]
 
 	\item \textbf{context} VideogiocoControl::nascondi(request)
 	\begin{itemize}
-		\item[ ] \textbf{post:} videogiocoService.getVideogioco(request.input(‘idVideogioco’)).nascosto = true
+		\item[ ] \textbf{post:} videogiocoService.getVideogioco(request.input(‘idVideogioco’)).nascosto == true
 	\end{itemize}
 \end{itemize}\\
 \hline
@@ -389,16 +399,16 @@ Invarianti & \begin{itemize}
 	\end{itemize}\\
 	\hline
 	Firme Metodi & \begin{itemize}
-		\item[+] chiudiDiscussione(Request \$request): JsonResponse
-		\item[+] creaNuovaDiscussione(Request \$request): Response
-		\item[+] creaDiscussione(Request \$request): Response
-		\item[+] commenta(Request \$request): JsonResponse
+		\item[+] chiudiDiscussione(Request request): JsonResponse
+		\item[+] creaNuovaDiscussione(Request request): Response
+		\item[+] creaDiscussione(Request request): Response
+		\item[+] commenta(Request request): JsonResponse
 		\item[+] iniziaReport(): Response
-		\item[+] creaReport(Request \$request): JsonResponse
-		\item[+] poniInRilievo(Request \$request): JsonResponse
-		\item[+] nascondi(Request \$request): Response
-		\item[+] visualizzaDettagliReport(Request \$request): Response
-		\item[+] risolviReport(Request \$request): Response
+		\item[+] creaReport(Request request): JsonResponse
+		\item[+] poniInRilievo(Request request): JsonResponse
+		\item[+] nascondi(Request request): Response
+		\item[+] visualizzaDettagliReport(Request request): Response
+		\item[+] risolviReport(Request request): Response
 	\end{itemize}\\
 	\hline
 Pre-condizioni & \begin{itemize}[leftmargin=*]
@@ -409,21 +419,21 @@ Pre-condizioni & \begin{itemize}[leftmargin=*]
 		and forumService
 		  .checkPermessiDiscussione(request.input(‘idDiscussione’))
 		and forumService
-		  .getDiscussione(request.input(‘idDiscussione’)).chiusa = false	
+		  .getDiscussione(request.input(‘idDiscussione’)).chiusa == false	
 	\end{itemize}
 
 	\item \textbf{context} ForumControl::creaNuovaDiscussione(request)
 	\begin{itemize}
 		\item[ ] \textbf{pre:} Auth::check()
 		and request.has(‘idVideogioco’)
-		and videogiocoService.checkVideogiocoAcquistato(request.input(‘idVideogioco’)) = true	
+		and videogiocoService.checkVideogiocoAcquistato(request.input(‘idVideogioco’)) == true	
 	\end{itemize}
 
 	\item \textbf{context} ForumControl::creaDiscussione(request)
 	\begin{itemize}
 		\item[ ] \textbf{pre:} Auth::check()
 		and request.hasAll([‘idVideogioco’, ‘titolo’, ‘corpo’])
-		and videogiocoService.checkVideogiocoAcquistato(request.input(‘idVideogioco’)) = true	
+		and videogiocoService.checkVideogiocoAcquistato(request.input(‘idVideogioco’)) == true	
 	\end{itemize}
 
 \end{itemize}\\
@@ -439,7 +449,7 @@ Pre-condizioni & \begin{itemize}[leftmargin=*]
 	\begin{itemize}
 		\item[ ] \textbf{pre:} Auth::check()
 		and request.hasAll([‘idDiscussione, ‘corpo’])
-		and videogiocoService.checkVideogiocoAcquistato(request.\newline input(‘idVideogioco’)) = true	
+		and videogiocoService.checkVideogiocoAcquistato(request.\newline input(‘idVideogioco’)) == true	
 	\end{itemize}
 
 	\item \textbf{context} ForumControl::iniziaReport()
@@ -455,12 +465,12 @@ Pre-condizioni & \begin{itemize}[leftmargin=*]
 
 	\item \textbf{context} ForumControl::poniInRilievo(request)
 	\begin{itemize}
-		\item[ ] \textbf{pre:} Auth::check() and request.has(‘idDiscussione’) and forumService\newline .checkPermessiDiscussione(request.input(‘idDiscussione’)) and forumService\newline .getDiscussione(request.input(‘idDiscussione’)).in\_rilievo = false
+		\item[ ] \textbf{pre:} Auth::check() and request.has(‘idDiscussione’) and forumService\newline .checkPermessiDiscussione(request.input(‘idDiscussione’)) and forumService\newline .getDiscussione(request.input(‘idDiscussione’)).in\_rilievo == false
 	\end{itemize}
 
 	\item \textbf{context} ForumControl::nascondi(request)
 	\begin{itemize}
-		\item[ ] \textbf{pre:} Auth::check() and utenzaService.isAdmin() and request.has(‘idCommento’) and forumService.getCommento(request.input(‘idCommento’)).nascosto = false
+		\item[ ] \textbf{pre:} Auth::check() and utenzaService.isAdmin() and request.has(‘idCommento’) and forumService.getCommento(request.input(‘idCommento’)).nascosto == false
 	\end{itemize}
 
 	\item \textbf{context} ForumControl::visualizzaDettagliReport(request)
@@ -470,19 +480,19 @@ Pre-condizioni & \begin{itemize}[leftmargin=*]
 	
 	\item \textbf{context} ForumControl::risolviReport(request)
 	\begin{itemize}
-		\item[ ] \textbf{pre:} Auth::check() and utenzaService.isAdmin() and request.has(‘idReport’) and forumService.getReport(request.input(‘idReport’)).esito = null
+		\item[ ] \textbf{pre:} Auth::check() and utenzaService.isAdmin() and request.has(‘idReport’) and forumService.getReport(request.input(‘idReport’)).esito == null
 	\end{itemize}
 \end{itemize}\\
 \hline
 Post-condizioni & \begin{itemize}[leftmargin=*]
 	\item \textbf{context} ForumControl::chiudiDiscussione(request)
 	\begin{itemize}
-		\item[ ] \textbf{post:} forumService.getDiscussione(request.input(‘idDiscussione’)).chiusa = true
+		\item[ ] \textbf{post:} forumService.getDiscussione(request.input(‘idDiscussione’)).chiusa == true
 	\end{itemize}
 
 	\item \textbf{context} ForumControl::creaDiscussione(request)
 	\begin{itemize}
-		\item[ ] \textbf{post:} forumService.getNumDiscussioni(request.input(‘idVideogioco’)) = forumService@pre.getNumDiscussioni(request.input(‘idVideogioco’)) + 1
+		\item[ ] \textbf{post:} forumService.getNumDiscussioni(request.input(‘idVideogioco’)) == forumService@pre.getNumDiscussioni(request.input(‘idVideogioco’)) + 1
 	\end{itemize}
 
 \end{itemize}\\
@@ -496,17 +506,17 @@ Post-condizioni & \begin{itemize}[leftmargin=*]
 Post-condizioni & \begin{itemize}[leftmargin=*]
 	\item \textbf{context} ForumControl::commenta(request)
 	\begin{itemize}
-		\item[ ] \textbf{post:} forumService\newline .getNumCommenti(request.input(‘idDiscussione’)) = forumService\newline @pre.getNumCommenti(request.input(‘idDiscussione’)) + 1
+		\item[ ] \textbf{post:} forumService\newline .getNumCommenti(request.input(‘idDiscussione’)) == forumService\newline @pre.getNumCommenti(request.input(‘idDiscussione’)) + 1
 	\end{itemize}
 
 	\item \textbf{context} ForumControl::poniInRilievo(request)
 	\begin{itemize}
-		\item[ ] \textbf{post:} forumService\newline .getDiscussione(request.input(‘idDiscussione’)).in\_rilievo = true
+		\item[ ] \textbf{post:} forumService\newline .getDiscussione(request.input(‘idDiscussione’)).in\_rilievo == true
 	\end{itemize}
 
 	\item \textbf{context} ForumControl::nascondi(request)
 	\begin{itemize}
-		\item[ ] \textbf{post:} forumService\newline .getCommento(request.input(‘idCommento’)).nascosto = true
+		\item[ ] \textbf{post:} forumService\newline .getCommento(request.input(‘idCommento’)).nascosto == true
 	\end{itemize}
 
 	\item \textbf{context} ForumControl::risolviReport(request)
@@ -555,7 +565,7 @@ Invarianti & \begin{itemize}
 Pre-condizioni & \begin{itemize}[leftmargin=*]
 	\item \textbf{context} UtenzaService::login(username, password)
 	\begin{itemize}
-		\item[ ] \textbf{pre:} utenzaRepository.allUsers()\verb|->| exists(u: Utente | u.username = username and u.password = Hash::make(password))
+		\item[ ] \textbf{pre:} utenzaRepository.allUsers()\verb|->| exists(u: Utente $|$ u.username == username and u.password == Hash::make(password))
 	\end{itemize}
 
 	\item \textbf{context} UtenzaService::registraUtente(username, password, email, avatar)
@@ -575,7 +585,7 @@ Pre-condizioni & \begin{itemize}[leftmargin=*]
 
 	\item \textbf{context} UtenzaService::getNumRichieste(utente)
 	\begin{itemize}
-		\item[ ] \textbf{pre:} utente.ruolo = 'Sviluppatore'	
+		\item[ ] \textbf{pre:} utente.ruolo == 'Sviluppatore'	
 	\end{itemize}
 
 \end{itemize}\\
@@ -589,27 +599,27 @@ Pre-condizioni & \begin{itemize}[leftmargin=*]
 Post-condizioni & \begin{itemize}[leftmargin=*]
 	\item \textbf{context} UtenzaService::login(username, password)
 	\begin{itemize}
-		\item[ ] \textbf{post:} ottieniProfilo().username = username
+		\item[ ] \textbf{post:} ottieniProfilo().username == username
 	\end{itemize}
 
 	\item \textbf{context} UtenzaService::logout()
 	\begin{itemize}
-		\item[ ] \textbf{post:} ottieniProfilo() = null
+		\item[ ] \textbf{post:} ottieniProfilo() == null
 	\end{itemize}
 	
 	\item \textbf{context} UtenzaService::registraUtente(username, password, email, avatar)
 	\begin{itemize}
-		\item[ ] \textbf{post:} ottieniProfilo().username = username and ottieniProfilo().password = Hash::make(password) and ottieniProfilo().email = email and Hash::make(ottieniProfilo().avatar) = Hash::make(avatar)
+		\item[ ] \textbf{post:} ottieniProfilo().username == username and ottieniProfilo().password == Hash::make(password) and ottieniProfilo().email == email and Hash::make(ottieniProfilo().avatar) == Hash::make(avatar)
 	\end{itemize}
 
 	\item \textbf{context} UtenzaService::resetPassword(email, password)
 	\begin{itemize}
-		\item[ ] \textbf{post:} ottieniProfilo().password = password
+		\item[ ] \textbf{post:} ottieniProfilo().password == password
 	\end{itemize}
 	
 	\item \textbf{context} UtenzaService::modificaDatiProfilo(username, email, avatar, isSviluppatore)
 	\begin{itemize}
-		\item[ ] \textbf{post:} (username = null or ottieniProfilo().username = username) and (email = null or ottieniProfilo().email = email) and (avatar = null or Hash::make(ottieniProfilo().avatar) = Hash::make(avatar)) and (isSviluppatore = null or ((ottieniProfilo().ruolo = 'Sviluppatore' and isSviluppatore) or (ottieniProfilo.ruolo = 'Cliente' and !isSviluppatore))
+		\item[ ] \textbf{post:} (username == null or ottieniProfilo().username == username) and (email == null or ottieniProfilo().email == email) and (avatar == null or Hash::make(ottieniProfilo().avatar) == Hash::make(avatar)) and (isSviluppatore == null or ((ottieniProfilo().ruolo == 'Sviluppatore' and isSviluppatore) or (ottieniProfilo.ruolo == 'Cliente' and !isSviluppatore))
 	\end{itemize}
 \end{itemize}\\
 \hline
@@ -637,24 +647,24 @@ Invarianti & \begin{itemize}
 	\end{itemize}\\
 	\hline
 	Firme Metodi & \begin{itemize}
-		\item[+] ottieniDatiVideogioco(int \$idVideogioco): Videogioco
+		\item[+] ottieniDatiVideogioco(int idVideogioco): Videogioco
 		\item[+] getListaVideogiochi(): Videogioco[]
-		\item[+] applicaCriteri(string \$titolo, float \$prezzo, string[] \$tagsObbligatorie, string[] \$tagsOpzionali, boolean \$acquistati = false, string \$ordine = 'DESC'): Videogioco[]
-		\item[+] ottieniVideogiochiSponsorizzati(Carbon \$data = now()): Videogioco[]
+		\item[+] applicaCriteri(string titolo, float prezzo, string[] tagsObbligatorie, string[] tagsOpzionali, boolean acquistati == false, string ordine == 'DESC'): Videogioco[]
+		\item[+] ottieniVideogiochiSponsorizzati(Carbon data == now()): Videogioco[]
 		\item[+] ottieniVideogiochiPiùScaricati(): Videogioco[]
 		\item[+] ottieniUltimiVideogiochiPubblicati(): Videogioco[]
-		\item[+] ottieniVideogiochiSimili(int \$idUtente): Videogioco[]
-		\item[+] aggiornaDatiVideogioco(int \$idVideogioco, File \$logo, string \$titolo, File[] \$immagini, string \$descrizione, float \$prezzo): void
+		\item[+] ottieniVideogiochiSimili(int idUtente): Videogioco[]
+		\item[+] aggiornaDatiVideogioco(int idVideogioco, File logo, string titolo, File[] immagini, string descrizione, float prezzo): void
 		\item[+] ottieniSintesiRichieste(): Richiesta[]
-		\item[+] ottieniDettagliRichiesta(int \$idRichiesta): Richiesta
-		\item[+] risolviRichiesta(int \$idRichiesta, int \$idRisolutore, boolean \$esito, string \$commento): void
-		\item[+] modificaDatiVideogioco(int \$idVideogioco, File \$logo, string \$titolo, File[] \$immagini, string \$descrizione, float \$prezzo): void
-		\item[+] richiediPubblicazioneVideogioco(int \$idAutore, File \$logo, string \$titolo, File[] \$immagini, string \$descrizione, float \$prezzo, File \$eseguibile): void
-		\item[+] verificaDisponibilitàSettimana(Carbon \$settimana): boolean
-		\item[+] procediPagamentoSponsorizzazione(int \$idVideogioco, Carbon[] \$settimane): void
-		\item[+] acquistaVideogioco(int \$idVideogioco)
-		\item[+] getEseguibileVideogioco(int \$idVideogioco, string \$versione): File
-		\item[+] suggerisciTags(int \$idUtente, int \$idVideogioco, string[] tags): void
+		\item[+] ottieniDettagliRichiesta(int idRichiesta): Richiesta
+		\item[+] risolviRichiesta(int idRichiesta, int idRisolutore, boolean esito, string commento): void
+		\item[+] modificaDatiVideogioco(int idVideogioco, File logo, string titolo, File[] immagini, string descrizione, float prezzo): void
+		\item[+] richiediPubblicazioneVideogioco(int idAutore, File logo, string titolo, File[] immagini, string descrizione, float prezzo, File eseguibile): void
+		\item[+] verificaDisponibilitàSettimana(Carbon settimana): boolean
+		\item[+] procediPagamentoSponsorizzazione(int idVideogioco, Carbon[] settimane): void
+		\item[+] acquistaVideogioco(int idVideogioco)
+		\item[+] getEseguibileVideogioco(int idVideogioco, string versione): File
+		\item[+] suggerisciTags(int idUtente, int idVideogioco, string[] tags): void
 	\end{itemize}\\
 	\hline
 \end{tabular}
@@ -664,15 +674,15 @@ Invarianti & \begin{itemize}
 \small\begin{tabular}{|| l | p{28em} ||} 
 	\hline
 	Firme Metodi & \begin{itemize}
-		\item[+] rimuoviSuggerimento(int \$idUtente, int \$idVideogioco, string[] tags): void
-		\item[+] salvaValutazione(int \$idUtente, int \$idRecensione, boolean giudizio)
-		\item[+] getTagsSuggerite(int \$idVideogioco, int \$idUtente): Tags[] 
-		\item[+] getValutazioneRecensione(int \$idRecensione, int \$idUtente): ValutazioneRecensione
-		\item[+] salvaRecensione(int \$idUtente, int \$idVideogioco, boolean \$giudizio, string \$commento): void
-		\item[+] getRecensione(int \$idVideogioco, int \$idUtente): Recensione
-		\item[+] creaReportVideogioco(int \$idVideogioco, int \$idUtente, string \$motivo): void
-		\item[+] nascondiVideogioco(int \$idVideogioco): void
-		\item[+] getVideogioco(int \$idVideogioco): Videogioco  
+		\item[+] rimuoviSuggerimento(int idUtente, int idVideogioco, string[] tags): void
+		\item[+] salvaValutazione(int idUtente, int idRecensione, boolean giudizio)
+		\item[+] getTagsSuggerite(int idVideogioco, int idUtente): Tags[] 
+		\item[+] getValutazioneRecensione(int idRecensione, int idUtente): ValutazioneRecensione
+		\item[+] salvaRecensione(int idUtente, int idVideogioco, boolean giudizio, string commento): void
+		\item[+] getRecensione(int idVideogioco, int idUtente): Recensione
+		\item[+] creaReportVideogioco(int idVideogioco, int idUtente, string motivo): void
+		\item[+] nascondiVideogioco(int idVideogioco): void
+		\item[+] getVideogioco(int idVideogioco): Videogioco  
 	\end{itemize}\\
 	\hline
 	Pre-condizioni & \begin{itemize}[leftmargin=*]
@@ -683,7 +693,7 @@ Invarianti & \begin{itemize}
 
 		\item \textbf{context} VideogiocoService::applicaCriteri(titolo, prezzo, tagsObbligatorie, tagsOpzionali, acquistati, ordine)
 		\begin{itemize}
-			\item[ ] \textbf{pre:} (titolo != null or prezzo != null or tagsObbligatorie != null or tagsOpzionali != null) and (ordine = 'DESC' or ordine = 'ASC')
+			\item[ ] \textbf{pre:} (titolo != null or prezzo != null or tagsObbligatorie != null or tagsOpzionali != null) and (ordine == 'DESC' or ordine == 'ASC')
 		\end{itemize}
 
 		\item \textbf{context} VideogiocoService::ottieniVideogiochiSponsorizzati(data)
@@ -819,27 +829,27 @@ Invarianti & \begin{itemize}
 	Post-condizioni & \begin{itemize}[leftmargin=*]
 		\item \textbf{context} VideogiocoService::ottieniVideogiochiPiùScaricati()
 		\begin{itemize}
-			\item[ ] \textbf{post:} result\verb|->|sortedBy(videogioco | -videogioco.downloads)
+			\item[ ] \textbf{post:} result\verb|->|sortedBy(videogioco $|$ -videogioco.downloads)
 		\end{itemize}
 
 		\item \textbf{context} VideogiocoService::ottieniUltimiVideogiochiPubblicati()
 		\begin{itemize}
-			\item[ ] \textbf{post:} result\verb|->|sortedBy(videogioco | -videogioco.created\_at.timestamp)
+			\item[ ] \textbf{post:} result\verb|->|sortedBy(videogioco $|$ -videogioco.created\_at.timestamp)
 		\end{itemize}
 
 		\item \textbf{context} VideogiocoService::ottieniSintesiRichieste()
 		\begin{itemize}
-			\item[ ] \textbf{post:} result->forAll(richiesta | richiesta.titolo != null and richiesta.descrizione != null and richiesta.tipo != null)
+			\item[ ] \textbf{post:} result->forAll(richiesta $|$ richiesta.titolo != null and richiesta.descrizione != null and richiesta.tipo != null)
 		\end{itemize}
 
 		\item \textbf{context} VideogiocoService::risolviRichiesta(idRichiesta, idRisolutore, esito, commento)
 		\begin{itemize}
-			\item[ ] \textbf{post:} videogiocoRepository.getRichiesta(idRichiesta).esito = esito and videogiocoRepository.getRichiesta(idRichiesta).commento = commento
+			\item[ ] \textbf{post:} videogiocoRepository.getRichiesta(idRichiesta).esito == esito and videogiocoRepository.getRichiesta(idRichiesta).commento == commento
 		\end{itemize}
 
 		\item \textbf{context} VideogiocoService::verificaDisponibilitàSettimana(settimana)
 		\begin{itemize}
-			\item[ ] \textbf{post:} videogiocoRepository.getSponsorizzazioni\verb|->|forAll(sponsorizzazione | sponsorizzazione.data\_inizio.startOfWeek() \verb|<>| settimana.startOfWeek() and sponsorizzazione.data\_fine.endOfWeek() \verb|<>| settimana.endOfWeek()) and result == true
+			\item[ ] \textbf{post:} videogiocoRepository.getSponsorizzazioni\verb|->|forAll(sponsorizzazione $|$ sponsorizzazione.data\_inizio.startOfWeek() \verb|<>| settimana.startOfWeek() and sponsorizzazione.data\_fine.endOfWeek() \verb|<>| settimana.endOfWeek()) and result == true
 		\end{itemize}
 
 		\item \textbf{context} VideogiocoService::suggerisciTags(idUtente, idVideogioco, tags)
@@ -927,12 +937,12 @@ Invarianti & \begin{itemize}
 	Pre-condizioni & \begin{itemize}[leftmargin=*]
 		\item \textbf{context} ForumService::poniInRilievo(idCommento, motivo)
 		\begin{itemize}
-			\item[ ] \textbf{pre:} idDiscussione != null and forumRepository.getDiscussione(idDiscussione) != null and forumRepository.getDiscussione(idDiscussione).in\_rilievo = false
+			\item[ ] \textbf{pre:} idDiscussione != null and forumRepository.getDiscussione(idDiscussione) != null and forumRepository.getDiscussione(idDiscussione).in\_rilievo == false
 		\end{itemize}
 
 		\item \textbf{context} ForumService::nascondiCommento(idCommento)
 		\begin{itemize}
-			\item[ ] \textbf{pre:} idCommento != null and forumRepository.getCommento(idCommento) != null and forumRepository.getCommento(idCommento).nascosto = false
+			\item[ ] \textbf{pre:} idCommento != null and forumRepository.getCommento(idCommento) != null and forumRepository.getCommento(idCommento).nascosto == false
 		\end{itemize}
 
 		\item \textbf{context} ForumService::ottieniDettagliReport(idReport)
@@ -949,32 +959,32 @@ Invarianti & \begin{itemize}
 	Post-condizioni & \begin{itemize}[leftmargin=*]
 		\item \textbf{context} ForumService::chiudiDiscussione(idDiscussione)
 		\begin{itemize}
-			\item[ ] \textbf{post:} forumRepository.getDiscussione(idDiscussione).chiusa = true
+			\item[ ] \textbf{post:} forumRepository.getDiscussione(idDiscussione).chiusa == true
 		\end{itemize}
 
 		\item \textbf{context} ForumService::commenta(idDiscussione, corpo)
 		\begin{itemize}
-			\item[ ] \textbf{post:} forumRepository.getNumCommenti(idDiscussione) = forumRepository@pre.getNumCommenti(idDiscussione) + 1
+			\item[ ] \textbf{post:} forumRepository.getNumCommenti(idDiscussione) == forumRepository@pre.getNumCommenti(idDiscussione) + 1
 		\end{itemize}
 
 		\item \textbf{context} ForumService::commenta(idDiscussione, corpo)
 		\begin{itemize}
-			\item[ ] \textbf{post:} forumRepository.getNumCommenti(idDiscussione) = forumRepository@pre.getNumCommenti(idDiscussione) + 1
+			\item[ ] \textbf{post:} forumRepository.getNumCommenti(idDiscussione) == forumRepository@pre.getNumCommenti(idDiscussione) + 1
 		\end{itemize}
 
 		\item \textbf{context} ForumService::poniInRilievo(idDiscussione)
 		\begin{itemize}
-			\item[ ] \textbf{post:} forumRepository.getDiscussione(idDiscussione).in\_rilievo = true
+			\item[ ] \textbf{post:} forumRepository.getDiscussione(idDiscussione).in\_rilievo == true
 		\end{itemize}
 
 		\item \textbf{context} ForumService::nascondiCommento(idCommento)
 		\begin{itemize}
-			\item[ ] \textbf{post:} forumRepository.getCommento(idCommento).nascosto = true
+			\item[ ] \textbf{post:} forumRepository.getCommento(idCommento).nascosto == true
 		\end{itemize}
 
 		\item \textbf{context} ForumService::risolviReport(idReport, giudizio)
 		\begin{itemize}
-			\item[ ] \textbf{post:} forumRepository.getReport(idReport).giudizio = giudizio
+			\item[ ] \textbf{post:} forumRepository.getReport(idReport).giudizio == giudizio
 		\end{itemize}
 	\end{itemize}\\
 	\hline
@@ -1027,12 +1037,12 @@ Invarianti & \begin{itemize}
 	Post-condizioni & \begin{itemize}[leftmargin=*]
 		\item \textbf{context} PagamentoService::callbackStripeAcquisto()
 		\begin{itemize}
-			\item[ ] \textbf{post:} videogiocoService.getVideogiochiAcquistati(idUtente)\verb|->|size = videogiocoService@pre.getVideogiochiAcquistati(idUtente)\verb|->|size + 1
+			\item[ ] \textbf{post:} videogiocoService.getVideogiochiAcquistati(idUtente)\verb|->|size == videogiocoService@pre.getVideogiochiAcquistati(idUtente)\verb|->|size + 1
 		\end{itemize}
 
 		\item \textbf{context} PagamentoService::callbackStripeAcquisto()
 		\begin{itemize}
-			\item[ ] \textbf{post:} videogiocoService.getNumSponsorizzazioni(idVideogioco)\verb|->|size = videogiocoService@pre.getNumSponsorizzazioni(idVideogioco)\verb|->|size + 1
+			\item[ ] \textbf{post:} videogiocoService.getNumSponsorizzazioni(idVideogioco)\verb|->|size == videogiocoService@pre.getNumSponsorizzazioni(idVideogioco)\verb|->|size + 1
 		\end{itemize}
 	\end{itemize}\\
 	\hline

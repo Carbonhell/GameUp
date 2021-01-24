@@ -14,17 +14,21 @@ class VideogiocoControl extends Controller
     public function __construct(VideogiocoService $videogiocoService) {
         $this->videogiocoService = $videogiocoService;
     }
+
     /**
-     * @param Request $request
      * @return View
      */
-    public function paginaIniziale(Request $request)
+    public function paginaIniziale(): View
     {
         return view('paginainiziale', [
             'ultimiVideogiochiPubblicati' => $this->videogiocoService->ottieniUltimiVideogiochiPubblicati()
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return View
+     */
     public function catalogo(Request $request)
     {
         if(empty($request->all())) {
