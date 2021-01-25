@@ -6,14 +6,22 @@ namespace App\Services;
 
 use App\Data\Videogioco;
 use App\Repositories\VideogiocoRepository;
+use Illuminate\Http\UploadedFile;
 
 class VideogiocoService
 {
     private $videogiocoRepository;
+    private $utenzaService;
 
-    public function __construct(VideogiocoRepository $videogiocoRepository)
+    public function __construct(VideogiocoRepository $videogiocoRepository, UtenzaService $utenzaService)
     {
         $this->videogiocoRepository = $videogiocoRepository;
+        $this->utenzaService = $utenzaService;
+    }
+
+    public function ottieniDatiVideogioco(int $idVideogioco): ?Videogioco
+    {
+        return $this->videogiocoRepository->getVideogioco($idVideogioco);
     }
 
     /**
@@ -53,15 +61,27 @@ class VideogiocoService
         );
     }
 
-    public
-    function getLogo(
-        int $idVideogioco
-    ) {
-        $videogioco = $this->videogiocoRepository->getVideogioco($idVideogioco);
-        if ($videogioco) {
-            return \Storage::get($videogioco->logo);
+    public function richiediPubblicazioneVideogioco(
+        UploadedFile $logo,
+        string $titolo,
+        array $immagini,
+        string $descrizione,
+        float $prezzo,
+        UploadedFile $eseguibile
+    ): void {
+        if (!$this->utenzaService->isSviluppatore()) {
+            return;
         }
-        return null;
+        $autoreId = $this->utenzaService->getUtenteAutenticato()->id;
+        $this->videogiocoRepository->createRichiestaPubblicazione(
+            $autoreId,
+            $logo,
+            $titolo,
+            $immagini,
+            $descrizione,
+            $prezzo,
+            $eseguibile
+        );
     }
 
 }

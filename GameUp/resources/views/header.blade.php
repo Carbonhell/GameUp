@@ -14,6 +14,12 @@
                 <a class="{{Route::currentRouteName() === 'catalogo' ? 'nav-link active' : 'nav-link'}}"
                    href="{{route('catalogo')}}">Catalogo</a>
             </li>
+            @if(Auth::user() && Auth::user()->ruolo === \App\Data\Utenza::ROLE_DEVELOPER)
+                <li class="nav-item">
+                    <a class="{{Route::currentRouteName() === 'avviaPubblicazioneVideogioco' ? 'nav-link active' : 'nav-link'}}"
+                       href="{{route('avviaPubblicazioneVideogioco')}}">Pubblica il tuo videogioco</a>
+                </li>
+            @endif
         </ul>
     </div>
     @if(Auth::check())

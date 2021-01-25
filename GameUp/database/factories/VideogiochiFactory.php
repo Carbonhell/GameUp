@@ -23,10 +23,16 @@ class VideogiochiFactory extends Factory
     public function definition()
     {
         return [
-            'id' => function() {
+            'id' => function () {
                 return Contenuti::factory()->create()->id;
             },
-            'logo' => 'uploads/loghi/' . $this->faker->image(storage_path('app/uploads/loghi'), 128, 128, null, false),
+            'logo' => 'storage/uploads/loghi/' . $this->faker->image(
+                    storage_path('app/public/uploads/loghi'),
+                    128,
+                    128,
+                    null,
+                    false
+                ),
             'autore_id' => 1,
             'titolo' => $this->faker->word(),
             'descrizione' => $this->faker->paragraph(),

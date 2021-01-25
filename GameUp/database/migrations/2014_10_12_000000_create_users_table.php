@@ -25,20 +25,6 @@ class CreateUsersTable extends Migration
                 $table->timestamps();
             }
         );
-
-        $now = now();
-        DB::table('users')->insert(
-            [
-                [
-                    'username' => 'admin',
-                    'password' => Hash::make('root'),
-                    'email' => 'example@example.com',
-                    'ruolo' => \App\Data\Utenza::ROLE_ADMIN,
-                    'created_at' => $now,
-                    'updated_at' => $now
-                ]
-            ]
-        );
     }
 
     /**

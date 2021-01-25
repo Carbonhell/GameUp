@@ -13,64 +13,79 @@ class Videogiochi extends Migration
      */
     public function up(): void
     {
-        Schema::create('contenuti', function(Blueprint $table) {
-            $table->increments('id');
-            $table->boolean('visibile');
-        });
-        Schema::create('videogiochi', function(Blueprint $table) {
-            $table->unsignedInteger('id')->primary();
-            $table->unsignedBigInteger('autore_id');
-            $table->string('logo');
-            $table->string('titolo');
-            $table->text('descrizione');
-            $table->decimal('prezzo');
-            $table->date('data_pubblicazione');
+        Schema::create(
+            'contenuti',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->boolean('visibile');
+            }
+        );
+        Schema::create(
+            'videogiochi',
+            function (Blueprint $table) {
+                $table->unsignedInteger('id')->primary();
+                $table->unsignedBigInteger('autore_id');
+                $table->string('logo');
+                $table->string('titolo');
+                $table->text('descrizione');
+                $table->decimal('prezzo');
+                $table->date('data_pubblicazione');
 
-            $table->timestamps();
-            $table->foreign('id')
-                ->on('contenuti')
-                ->references('id');
-            $table->foreign('autore_id')
-                ->on('users')
-                ->references('id');
-        });
+                $table->timestamps();
+                $table->foreign('id')
+                    ->on('contenuti')
+                    ->references('id');
+                $table->foreign('autore_id')
+                    ->on('users')
+                    ->references('id');
+            }
+        );
 
-        Schema::create('videogiochi_immagini', function(Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('videogioco_id');
-            $table->string('immagine');
+        Schema::create(
+            'videogiochi_immagini',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->unsignedInteger('videogioco_id');
+                $table->string('immagine');
 
-            $table->timestamps();
-            $table->foreign('videogioco_id')
-                ->on('videogiochi')
-                ->references('id');
-        });
+                $table->timestamps();
+                $table->foreign('videogioco_id')
+                    ->on('videogiochi')
+                    ->references('id');
+            }
+        );
 
-        Schema::create('videogiochi_versioni', function(Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('videogioco_id');
-            $table->string('versione');
-            $table->string('eseguibile');
-            $table->text('changelog');
+        Schema::create(
+            'videogiochi_versioni',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->unsignedInteger('videogioco_id');
+                $table->string('versione');
+                $table->string('eseguibile');
+                $table->text('changelog');
 
-            $table->timestamps();
-            $table->foreign('videogioco_id')
-                ->on('videogiochi')
-                ->references('id');
-        });
+                $table->timestamps();
+                $table->foreign('videogioco_id')
+                    ->on('videogiochi')
+                    ->references('id');
+            }
+        );
 
-        Schema::create('videogiochi_sponsorizzazioni', function(Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('videogioco_id');
-            $table->date('data_inizio');
-            $table->date('data_fine');
-            $table->decimal('costo');
+        Schema::create(
+            'videogiochi_sponsorizzazioni',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->unsignedInteger('videogioco_id');
+                $table->date('data_inizio');
+                $table->date('data_fine');
+                $table->decimal('costo');
 
-            $table->timestamps();
-            $table->foreign('videogioco_id')
-                ->on('videogiochi')
-                ->references('id');
-        });
+                $table->timestamps();
+                $table->foreign('videogioco_id')
+                    ->on('videogiochi')
+                    ->references('id');
+            }
+        );
     }
 
     /**

@@ -33,5 +33,8 @@ Route::prefix('utenza')->group(function() {
 Route::prefix('videogiochi')->group(function() {
     Route::get('logo/{idVideogioco}', [VideogiocoControl::class, 'getLogo'])->name('getLogo');
     Route::get('catalogo', [VideogiocoControl::class, 'catalogo'])->name('catalogo');
+    Route::get('dettagli', [VideogiocoControl::class, 'ottieniDatiVideogioco'])->name('dettagliVideogioco');
+    Route::get('iniziaRichiestaPubblicazione', [VideogiocoControl::class, 'avviaPubblicazioneVideogioco'])->name('avviaPubblicazioneVideogioco');
+    Route::post('richiediPubblicazioneVideogioco', [VideogiocoControl::class, 'richiediPubblicazioneVideogioco'])->name('richiediPubblicazioneVideogioco');
 });
 

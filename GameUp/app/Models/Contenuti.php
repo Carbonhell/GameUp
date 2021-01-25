@@ -12,13 +12,17 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Contenuti newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Contenuti query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property int $visibile
+ * @method static \Illuminate\Database\Eloquent\Builder|Contenuti whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Contenuti whereVisibile($value)
  */
 class Contenuti extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
     protected $table = 'contenuti';
-
     /**
      * The attributes that are mass assignable.
      *
@@ -27,7 +31,5 @@ class Contenuti extends Model
     protected $fillable = [
         'visible',
     ];
-
-    public $timestamps = false;
 
 }

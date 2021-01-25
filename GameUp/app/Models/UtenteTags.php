@@ -14,6 +14,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|UtenteTags newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|UtenteTags query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property int $utente_id
+ * @property int $tag_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|UtenteTags whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UtenteTags whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UtenteTags whereTagId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UtenteTags whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UtenteTags whereUtenteId($value)
  */
 class UtenteTags extends Model
 {

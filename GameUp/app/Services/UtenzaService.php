@@ -19,22 +19,22 @@ class UtenzaService
         $this->utenzaRepository = $utenzaRepository;
     }
 
-    public function isAuthenticated()
-    {
-        return Auth::check();
-    }
-
     public function isAdmin()
     {
-        if(!$this->isAuthenticated()) {
+        if (!$this->isAuthenticated()) {
             return false;
         }
         return Auth::user()->ruolo === Utenza::ROLE_ADMIN;
     }
 
+    public function isAuthenticated()
+    {
+        return Auth::check();
+    }
+
     public function isSviluppatore()
     {
-        if(!$this->isAuthenticated()) {
+        if (!$this->isAuthenticated()) {
             return false;
         }
         return Auth::user()->ruolo === Utenza::ROLE_DEVELOPER;
@@ -65,6 +65,28 @@ class UtenzaService
         $auth = $this->utenzaRepository->createUtente($username, $password, $email, $avatar);
         Auth::login($auth);
         return true;
+    }
+
+    /**
+     * @param string $username
+     * @return bool
+     */
+    public
+    function usernameExists(
+        string $username
+    ): bool {
+        return $this->utenzaRepository->findUsername($username) !== null;
+    }
+
+    /**
+     * @param string $email
+     * @return bool
+     */
+    public
+    function emailExists(
+        string $email
+    ): bool {
+        return $this->utenzaRepository->findEmail($email) !== null;
     }
 
     /**
@@ -99,36 +121,14 @@ class UtenzaService
     }
 
     /**
-     * @param string $username
-     * @return bool
-     */
-    public
-    function usernameExists(
-        string $username
-    ): bool {
-        return $this->utenzaRepository->findUsername($username) !== null;
-    }
-
-    /**
-     * @param string $email
-     * @return bool
-     */
-    public
-    function emailExists(
-        string $email
-    ): bool {
-        return $this->utenzaRepository->findEmail($email) !== null;
-    }
-
-    /**
      * @return string
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public
-    function getAvatar(): string
+    function getAvatar(): ?string
     {
         $avatarPath = Auth::user()->avatar;
-        return \Storage::get($avatarPath);
+        return $avatarPath ? \Storage::get($avatarPath) : null;
     }
 
     /**
@@ -137,7 +137,7 @@ class UtenzaService
     public
     function getUtenteAutenticato(): ?Utenza
     {
-        if(!$this->isAuthenticated()) {
+        if (!$this->isAuthenticated()) {
             return null;
         }
         return Utenza::from(Auth::user());

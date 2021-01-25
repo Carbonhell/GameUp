@@ -13,6 +13,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Commenti newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Commenti query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property int $discussione_id
+ * @property string $corpo
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Commenti whereCorpo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Commenti whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Commenti whereDiscussioneId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Commenti whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Commenti whereUpdatedAt($value)
  */
 class Commenti extends Model
 {

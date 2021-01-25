@@ -14,6 +14,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|RecensioniValutazioni newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecensioniValutazioni query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property int $autore_id
+ * @property int $recensione_id
+ * @property int $giudizio
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|RecensioniValutazioni whereAutoreId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RecensioniValutazioni whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RecensioniValutazioni whereGiudizio($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RecensioniValutazioni whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RecensioniValutazioni whereRecensioneId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RecensioniValutazioni whereUpdatedAt($value)
  */
 class RecensioniValutazioni extends Model
 {

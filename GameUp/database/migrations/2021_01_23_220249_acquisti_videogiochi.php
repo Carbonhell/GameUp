@@ -13,19 +13,22 @@ class AcquistiVideogiochi extends Migration
      */
     public function up()
     {
-        Schema::create('acquisti_videogiochi', function(Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('videogioco_id');
-            $table->unsignedBigInteger('compratore_id');
+        Schema::create(
+            'acquisti_videogiochi',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->unsignedInteger('videogioco_id');
+                $table->unsignedBigInteger('compratore_id');
 
-            $table->timestamps();
-            $table->foreign('videogioco_id')
-                ->on('videogiochi')
-                ->references('id');
-            $table->foreign('compratore_id')
-                ->on('users')
-                ->references('id');
-        });
+                $table->timestamps();
+                $table->foreign('videogioco_id')
+                    ->on('videogiochi')
+                    ->references('id');
+                $table->foreign('compratore_id')
+                    ->on('users')
+                    ->references('id');
+            }
+        );
     }
 
     /**

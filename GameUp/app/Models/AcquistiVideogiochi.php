@@ -11,6 +11,18 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Tags newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Tags query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property int $videogioco_id
+ * @property int $compratore_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $compratore
+ * @property-read \App\Models\Videogiochi $videogioco
+ * @method static \Illuminate\Database\Eloquent\Builder|AcquistiVideogiochi whereCompratoreId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcquistiVideogiochi whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcquistiVideogiochi whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcquistiVideogiochi whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcquistiVideogiochi whereVideogiocoId($value)
  */
 class AcquistiVideogiochi extends Model
 {

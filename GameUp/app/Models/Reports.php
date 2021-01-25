@@ -15,6 +15,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Reports newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Reports query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property int $autore_id
+ * @property int $risolutore_id
+ * @property int $contenuto_id
+ * @property string $motivo
+ * @property int $giudizio
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Reports whereAutoreId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reports whereContenutoId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reports whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reports whereGiudizio($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reports whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reports whereMotivo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reports whereRisolutoreId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reports whereUpdatedAt($value)
  */
 class Reports extends Model
 {

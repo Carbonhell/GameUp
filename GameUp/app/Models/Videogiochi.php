@@ -21,11 +21,35 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Videogiochi newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Videogiochi query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property int $autore_id
+ * @property string $logo
+ * @property string $titolo
+ * @property string $descrizione
+ * @property string $prezzo
+ * @property string $data_pubblicazione
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $compratori
+ * @property-read int|null $compratori_count
+ * @property-read \App\Models\Contenuti $contenuti
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tags[] $tags
+ * @property-read int|null $tags_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Videogiochi whereAutoreId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Videogiochi whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Videogiochi whereDataPubblicazione($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Videogiochi whereDescrizione($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Videogiochi whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Videogiochi whereLogo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Videogiochi wherePrezzo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Videogiochi whereTitolo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Videogiochi whereUpdatedAt($value)
  */
 class Videogiochi extends Model
 {
     use HasFactory;
 
+    public $incrementing = false;
     protected $table = 'videogiochi';
     /**
      * The attributes that are mass assignable.

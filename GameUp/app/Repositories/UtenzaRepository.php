@@ -85,8 +85,8 @@ class UtenzaRepository
             ]
         );
 
-        if($avatar) {
-            $filePath = \Storage::putFile('uploads/avatars', $avatar);
+        if ($avatar) {
+            $filePath = \Storage::putFile('public/uploads/avatars', $avatar);
             $model->avatar = $filePath;
         }
 
@@ -106,20 +106,20 @@ class UtenzaRepository
         if (!$user || (!$username && !$nuovaPassword && !$email && $isSviluppatore === null && !$avatar)) {
             return false;
         }
-        if($username) {
+        if ($username) {
             $user->username = $username;
         }
-        if($nuovaPassword) {
+        if ($nuovaPassword) {
             $user->password = \Hash::make($nuovaPassword);
         }
-        if($email) {
+        if ($email) {
             $user->email = $email;
         }
-        if($isSviluppatore !== null) {
+        if ($isSviluppatore !== null) {
             $user->ruolo = $isSviluppatore ? Utenza::ROLE_DEVELOPER : Utenza::ROLE_CLIENT;
         }
-        if($avatar) {
-            $filePath = \Storage::putFile('uploads/avatars', $avatar);
+        if ($avatar) {
+            $filePath = \Storage::putFile('public/uploads/avatars', $avatar);
             $user->avatar = $filePath;
         }
         $user->update();

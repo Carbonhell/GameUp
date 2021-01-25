@@ -13,6 +13,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|VideogiochiVersioni newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|VideogiochiVersioni query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property int $videogioco_id
+ * @property string $versione
+ * @property string $eseguibile
+ * @property string $changelog
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|VideogiochiVersioni whereChangelog($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VideogiochiVersioni whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VideogiochiVersioni whereEseguibile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VideogiochiVersioni whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VideogiochiVersioni whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VideogiochiVersioni whereVersione($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|VideogiochiVersioni whereVideogiocoId($value)
  */
 class VideogiochiVersioni extends Model
 {

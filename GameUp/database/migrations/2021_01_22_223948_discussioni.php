@@ -13,32 +13,38 @@ class Discussioni extends Migration
      */
     public function up()
     {
-        Schema::create('discussioni', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('videogioco_id');
-            $table->string('titolo');
-            $table->boolean('in_rilievo')->default(false);
-            $table->boolean('chiusa')->default(false);
+        Schema::create(
+            'discussioni',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->unsignedInteger('videogioco_id');
+                $table->string('titolo');
+                $table->boolean('in_rilievo')->default(false);
+                $table->boolean('chiusa')->default(false);
 
-            $table->timestamps();
-            $table->foreign('videogioco_id')
-                ->on('videogiochi')
-                ->references('id');
-        });
+                $table->timestamps();
+                $table->foreign('videogioco_id')
+                    ->on('videogiochi')
+                    ->references('id');
+            }
+        );
 
-        Schema::create('commenti', function (Blueprint $table) {
-            $table->unsignedInteger('id')->primary();
-            $table->unsignedInteger('discussione_id');
-            $table->text('corpo');
+        Schema::create(
+            'commenti',
+            function (Blueprint $table) {
+                $table->unsignedInteger('id')->primary();
+                $table->unsignedInteger('discussione_id');
+                $table->text('corpo');
 
-            $table->timestamps();
-            $table->foreign('id')
-                ->on('contenuti')
-                ->references('id');
-            $table->foreign('discussione_id')
-                ->on('discussioni')
-                ->references('id');
-        });
+                $table->timestamps();
+                $table->foreign('id')
+                    ->on('contenuti')
+                    ->references('id');
+                $table->foreign('discussione_id')
+                    ->on('discussioni')
+                    ->references('id');
+            }
+        );
     }
 
     /**

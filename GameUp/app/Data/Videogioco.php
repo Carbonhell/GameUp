@@ -9,7 +9,7 @@ use App\Models\Videogiochi;
 class Videogioco
 {
     public $id;
-    public $autoreId;
+    public $autore;
     public $logo;
     public $titolo;
     public $descrizione;
@@ -17,14 +17,16 @@ class Videogioco
     public $dataPubblicazione;
     public $dataCreazione;
     public $dataAggiornamento;
+    public $numDownloads;
 
     public $tags;
+    public $immagini;
 
     public static function from(Videogiochi $model)
     {
         $videogioco = new Videogioco();
         $videogioco->id = $model->id;
-        $videogioco->autoreId = $model->autore_id;
+        $videogioco->autore = $model->autore->username;
         $videogioco->logo = $model->logo;
         $videogioco->titolo = $model->titolo;
         $videogioco->descrizione = $model->descrizione;
@@ -32,11 +34,10 @@ class Videogioco
         $videogioco->dataPubblicazione = $model->data_pubblicazione;
         $videogioco->dataCreazione = $model->created_at;
         $videogioco->dataAggiornamento = $model->updated_at;
-        return $videogioco;
-    }
+        $videogioco->numDownloads = $model->compratori_count ?? 0;
 
-    public function withTags(array $tags) {
-        $this->tags = $tags;
-        return $this;
+        $videogioco->tags = $model->tags->pluck('titolo')->toArray();
+        $videogioco->immagini = $model->immagini->pluck('immagine')->toArray();
+        return $videogioco;
     }
 }
