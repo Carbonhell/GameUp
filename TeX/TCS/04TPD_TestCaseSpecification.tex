@@ -1,0 +1,60 @@
+\begin{tabular}{|| l | p{25em} ||} 
+	\hline
+	Identificatore test case & TC1\\
+	\hline
+	Locazione & tests/Feature/UtenzaRepositoryRegistrazioneTest\\
+	\hline
+	Feature da testare & La funzionalità da testare è il corretto salvataggio dei dati di un utente nel database relazionale.\\
+	\hline
+	Criteri di successo/fallimento & Il test passa se viene correttamente inserito nel database un nuovo utente con i dati forniti come input, e in seguito se l'inserimento di un utente con lo stesso username ed email lancia una eccezione.\\
+	\hline
+	Metodo di controllo & Il test viene avviato tramite il comando \emph{./vendor/sail/bin artisan test}, il quale esegue il TestCase e PHPUnit.\\
+	\hline
+	Dati & I dati di input vengono forniti tramite un dataProvider che ritorna un iteratore di argomenti che verranno passati alla procedura di test, i quali consistono in due set: uno contenente username, email e password, il secondo contenente username, email, password ed un avatar mock.\\
+	\hline
+	Procedura di test & Il test viene avviato tramite un comando apposito e la libreria PHPUnit esegue il codice di setup, per poi controllando (tramite l'uso di asserzioni) se i risultati coincidono con l'oracolo proveniente dalle specifiche del requisito in analisi.\\
+	\hline
+	Requisiti Speciali & I container Docker devono essere in esecuzione, in particolare quello ospitante il database relazionale MySQL. Tutte le migrazioni devono essere state eseguite tramite il comando \emph{./vendor/sail/bin artisan migrate}.\\
+	\hline
+\end{tabular}
+\newpage
+\begin{tabular}{|| l | p{25em} ||} 
+	\hline
+	Identificatore test case & TC2\\
+	\hline
+	Locazione & tests/Feature/UtenzaRepositoryLoginTest\\
+	\hline
+	Feature da testare & La funzionalità da testare è la corretta autenticazione di un utente al sistema.\\
+	\hline
+	Criteri di successo/fallimento & Il test passa se l'utente viene autenticato correttamente all'account associato all'username fornito, se la password associata coincide con quella salvata nel database. Se l'username non è registrato o se la password fornita non è associata all'username fornito, allora viene individuata una failure.\\
+	\hline
+	Metodo di controllo & Il test viene avviato tramite il comando \emph{./vendor/sail/bin artisan test}, il quale esegue il TestCase e PHPUnit.\\
+	\hline
+	Dati & I dati di input vengono forniti tramite un dataProvider che ritorna un iteratore di argomenti che verranno passati alla procedura di test, i quali consistono in tre set: uno contenente username non esistente e una password, il secondo contenente l'username dell'account iniziale del sistema ('admin') e una password non corretta ('errore') e il terzo contenente le credenziali corrette per l'account amministratore (username 'admin' e password 'root').\\
+	\hline
+	Procedura di test & Il test viene avviato tramite un comando apposito e la libreria PHPUnit esegue il codice di setup, per poi controllando (tramite l'uso di asserzioni) se i risultati coincidono con l'oracolo proveniente dalle specifiche del requisito in analisi.\\
+	\hline
+	Requisiti Speciali & I container Docker devono essere in esecuzione, in particolare quello ospitante il database relazionale MySQL. Tutte le migrazioni devono essere state eseguite tramite il comando \emph{./vendor/sail/bin artisan migrate}. Il \emph{seeding} iniziale del database deve essere effettuato tramite il comando \emph{./vendor/sail/bin artisan db:seed} per permettere la creazione dell'account amministratore.\\
+	\hline
+\end{tabular}
+
+\newpage
+\begin{tabular}{|| l | p{25em} ||} 
+	\hline
+	Identificatore test case & TC3\\
+	\hline
+	Locazione & tests/Feature/\newline UtenzaRepositoryCreateRichiestaPubblicazioneTest\\
+	\hline
+	Feature da testare & La funzionalità da testare è la corretta generazione di una richiesta di pubblicazione di un videogioco.\\
+	\hline
+	Criteri di successo/fallimento & Il test passa se .\\
+	\hline
+	Metodo di controllo & Il test viene avviato tramite il comando \emph{./vendor/sail/bin artisan test}, il quale esegue il TestCase e PHPUnit.\\
+	\hline
+	Dati & I dati di input vengono forniti tramite un dataProvider che ritorna un iteratore di argomenti che verranno passati alla procedura di test, i quali consistono in tre set: uno contenente username non esistente e una password, il secondo contenente l'username dell'account iniziale del sistema ('admin') e una password non corretta ('errore') e il terzo contenente le credenziali corrette per l'account amministratore (username 'admin' e password 'root').\\
+	\hline
+	Procedura di test & Il test viene avviato tramite un comando apposito e la libreria PHPUnit esegue il codice di setup, per poi controllando (tramite l'uso di asserzioni) se i risultati coincidono con l'oracolo proveniente dalle specifiche del requisito in analisi.\\
+	\hline
+	Requisiti Speciali & I container Docker devono essere in esecuzione, in particolare quello ospitante il database relazionale MySQL. Tutte le migrazioni devono essere state eseguite tramite il comando \emph{./vendor/sail/bin artisan migrate}. Il \emph{seeding} iniziale del database deve essere effettuato tramite il comando \emph{./vendor/sail/bin artisan db:seed} per permettere la creazione dell'account amministratore.\\
+	\hline
+\end{tabular}

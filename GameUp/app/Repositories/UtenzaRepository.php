@@ -8,6 +8,7 @@ use App\Data\Utenza;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
 
 class UtenzaRepository
 {
@@ -80,7 +81,7 @@ class UtenzaRepository
         $model->fill(
             [
                 'username' => $username,
-                'password' => \Hash::make($password),
+                'password' => Hash::make($password),
                 'email' => $email,
             ]
         );

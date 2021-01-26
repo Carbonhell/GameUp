@@ -1,0 +1,106 @@
+\section{Registrazione}
+
+\begin{tabular}{|| l | p{25em} ||} 
+	\hline
+	Parametro & Username\\
+	\hline
+	Esistente [UE] & \begin{itemize}
+	\item L'username esiste già nel database [Error]
+	\item L'username è unico [UsernameUnico] 
+	\end{itemize}\\
+	\hline
+\end{tabular}
+\\
+\begin{tabular}{|| l | p{25em} ||} 
+	\hline
+	Parametro & Email\\
+	\hline
+	Esistente [EE] & \begin{itemize}
+	\item L'email esiste già nel database [Error]
+	\item L'email è unica [EmailUnica, if UsernameUnico] 
+	\end{itemize}\\
+	\hline
+\end{tabular}
+\\
+\begin{tabular}{|| l | p{25em} ||} 
+	\hline
+	Parametro & Avatar\\
+	\hline
+	Presente [PA] & \begin{itemize}
+	\item L'avatar è effettivamente una istanza di UploadedFile [AvatarPresente, if UsernameUnico and EmailUnica]
+	\item L'avatar non viene passato ed è quindi null [AvatarAssente, if UsernameUnico and EmailUnica]
+	\end{itemize}\\
+	\hline
+\end{tabular}
+\\\\\\
+\begin{tabular}{|| c | c | c ||}
+	\hline
+	Codice & Combinazione & Esito\\
+	\hline
+	TC1\_1 & UE1 & Errore: Username esistente \\
+	\hline
+	TC1\_2 & UE2,EE1 & Errore: Email esistente \\
+	\hline
+	TC1\_3 & UE2,EE2,PA1 & Successo: Utente registrato (con avatar) \\
+	\hline
+	TC1\_4 & UE2,EE2,PA2 & Successo: Utente registrato (ma senza avatar) \\
+	\hline
+\end{tabular}
+
+
+\section{Login}
+\begin{tabular}{|| l | p{25em} ||} 
+	\hline
+	Parametro & Username\\
+	\hline
+	Esistente [UE] & \begin{itemize}
+	\item L'username non è presente nel database [Error] 
+	\item L'username esiste nel database [UsernameEsiste]
+	\end{itemize}\\
+	\hline
+\end{tabular}
+\\
+\begin{tabular}{|| l | p{25em} ||} 
+	\hline
+	Parametro & Password\\
+	\hline
+	Corretta [PC] & \begin{itemize}
+	\item L'hash della password fornita non coincide con l'hash salvato nel database per l'username fornito [Error]
+	\item L'hash della password fornita è uguale all'hash associato all'username fornito [PasswordCorretta]
+	\end{itemize}\\
+	\hline
+\end{tabular}
+\\\\\\
+\begin{tabular}{|| c | c | c ||}
+	\hline
+	Codice & Combinazione & Esito\\
+	\hline
+	TC2\_1 & UE1 & Errore: Username non esistente \\
+	\hline
+	TC1\_2 & UE2,PC1 & Errore: Password non corretta \\
+	\hline
+	TC1\_3 & UE2,PC2 & Successo: Password corretta, utente autenticato. \\
+	\hline
+\end{tabular}
+
+\section{Richiesta Pubblicazione Videogioco}
+\begin{tabular}{|| l | p{25em} ||} 
+	\hline
+	Parametro & ID Autore\\
+	\hline
+	Autore Esistente [AE] & \begin{itemize}
+	\item L'ID dell'autore fornito come argomento non è associato ad alcun utente attualmente nel sistema. [Error]
+	\item L'ID dell'autore fornito come argomento è effettivamente associato ad un utente attualmente presente nel database. [AE\_OK]
+	\end{itemize}\\
+	\hline
+\end{tabular}
+\\\\\\
+\begin{tabular}{|| c | c | c ||}
+	\hline
+	Codice & Combinazione & Esito\\
+	\hline
+	TC3\_1 & AE1 & Errore: Utente autore non trovato \\
+	\hline
+	TC3\_2 & AE2 & Successo: Richiesta pubblicazione generata \\
+	\hline
+\end{tabular}
