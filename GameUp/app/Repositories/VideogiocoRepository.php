@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 
 use App\Data\Videogioco;
+use App\Models\Contenuti;
 use App\Models\Videogiochi;
 use App\Models\VideogiochiRichieste;
 use App\Models\VideogiochiRichiesteImmagini;
@@ -122,5 +123,22 @@ class VideogiocoRepository
             $richiestaImmagini->immagine = \Storage::putFile('richieste/immagini', $immagine);
             $richiestaImmagini->save();
         }
+    }
+
+    public function creaVideogioco(Videogioco $fromRichiesta)
+    {
+        $contenuto = new Contenuti();
+        $contenuto->visibile = true;
+        $contenuto->save();
+
+        $model = new Videogiochi();
+        $model->id = $contenuto->id;
+        $model->autore_id = $fromRichiesta->autore;
+        $model->logo = $fromRichiesta->logo;
+        $model->titolo = $fromRichiesta->titolo;
+        $model->descrizione = $fromRichiesta->descrizione;
+        $model->prezzo = $fromRichiesta->prezzo;
+        $model->data_pubblicazione = $fromRichiesta->dataPubblicazione;
+        $model->save();
     }
 }

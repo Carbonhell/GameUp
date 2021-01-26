@@ -20,6 +20,12 @@
                        href="{{route('avviaPubblicazioneVideogioco')}}">Pubblica il tuo videogioco</a>
                 </li>
             @endif
+            @if(Auth::user() && Auth::user()->ruolo === \App\Data\Utenza::ROLE_ADMIN)
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{{route('admin.home')}}">Pannello Amministrativo</a>
+                </li>
+            @endif
         </ul>
     </div>
     @if(Auth::check())

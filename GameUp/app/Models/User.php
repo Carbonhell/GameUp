@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Encore\Admin\Auth\Database\HasPermissions;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 
 /**
@@ -32,9 +36,12 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUsername($value)
  */
-class User extends Authenticatable
+class User extends Model implements AuthenticatableContract
 {
-    use HasFactory, Notifiable;
+    use Authenticatable;
+    use HasFactory;
+    use HasPermissions;
+    use Notifiable;
 
     protected $table = 'users';
     /**
@@ -56,4 +63,32 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    /**
+     * A user has and belongs to many roles.
+     *
+     * @return BelongsToMany
+     */
+    public function roles(): BelongsToMany
+    {
+        $pivotTable = config('admin.database.role_users_table');
+
+        $relatedModel = config('admin.database.roles_model');
+
+        return $this->belongsToMany($relatedModel, $pivotTable, 'user_id', 'role_id');
+    }
+
+    /**
+     * A User has and belongs to many permissions.
+     *
+     * @return BelongsToMany
+     */
+    public function permissions(): BelongsToMany
+    {
+        $pivotTable = config('admin.database.user_permissions_table');
+
+        $relatedModel = config('admin.database.permissions_model');
+
+        return $this->belongsToMany($relatedModel, $pivotTable, 'user_id', 'permission_id');
+    }
 }
